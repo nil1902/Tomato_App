@@ -1,0 +1,507 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+// Run this script with: dart run scripts/insert_dummy_hotels.dart
+// Make sure to replace YOUR_ACCESS_TOKEN with a valid token
+
+const String baseUrl = 'https://nukpc39r.ap-southeast.insforge.app';
+const String accessToken = 'YOUR_ACCESS_TOKEN'; // Replace with your actual token
+
+Future<void> main() async {
+  print('🏨 Starting to insert 15 dummy hotels...\n');
+
+  final hotels = [
+    // Luxury Hotels
+    {
+      'name': 'The Royal Romance Palace',
+      'description': 'Experience ultimate luxury in our palatial suites with private pools, butler service, and breathtaking mountain views. Perfect for couples seeking an unforgettable romantic escape with world-class amenities and personalized service.',
+      'city': 'Udaipur',
+      'address': 'Lake Palace Road, Pichola Lake, Udaipur, Rajasthan 313001',
+      'lat': 24.5760,
+      'lng': 73.6810,
+      'star_rating': 5,
+      'couple_rating': 4.9,
+      'price_per_night': 25000,
+      'privacy_assured': true,
+      'category': 'luxury',
+      'amenities': {
+        'wifi': true,
+        'pool': true,
+        'spa': true,
+        'restaurant': true,
+        'bar': true,
+        'gym': true,
+        'room_service': true,
+        'parking': true,
+        'airport_shuttle': true,
+        'couples_massage': true,
+        'private_dining': true,
+        'jacuzzi': true,
+        'butler_service': true,
+        'champagne_welcome': true
+      },
+      'images': [
+        'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800',
+        'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800',
+        'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800'
+      ],
+      'is_active': true
+    },
+    {
+      'name': 'Sunset Paradise Resort',
+      'description': 'Beachfront luxury resort offering private villas with infinity pools, couples spa treatments, and romantic candlelit dinners on the beach. Wake up to stunning ocean views and fall asleep to the sound of waves.',
+      'city': 'Goa',
+      'address': 'Candolim Beach Road, North Goa, Goa 403515',
+      'lat': 15.5200,
+      'lng': 73.7630,
+      'star_rating': 5,
+      'couple_rating': 4.8,
+      'price_per_night': 18000,
+      'privacy_assured': true,
+      'category': 'luxury',
+      'amenities': {
+        'wifi': true,
+        'pool': true,
+        'spa': true,
+        'restaurant': true,
+        'bar': true,
+        'gym': true,
+        'room_service': true,
+        'parking': true,
+        'beach_access': true,
+        'water_sports': true,
+        'couples_massage': true,
+        'private_dining': true,
+        'jacuzzi': true
+      },
+      'images': [
+        'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800',
+        'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=800',
+        'https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=800'
+      ],
+      'is_active': true
+    },
+    {
+      'name': 'Himalayan Heights Retreat',
+      'description': 'Secluded mountain resort with panoramic Himalayan views, cozy fireplaces, and private balconies. Enjoy couples yoga, nature walks, and stargazing sessions in complete privacy and tranquility.',
+      'city': 'Manali',
+      'address': 'Old Manali Road, Manali, Himachal Pradesh 175131',
+      'lat': 32.2432,
+      'lng': 77.1892,
+      'star_rating': 5,
+      'couple_rating': 4.7,
+      'price_per_night': 15000,
+      'privacy_assured': true,
+      'category': 'luxury',
+      'amenities': {
+        'wifi': true,
+        'spa': true,
+        'restaurant': true,
+        'bar': true,
+        'room_service': true,
+        'parking': true,
+        'fireplace': true,
+        'mountain_view': true,
+        'couples_massage': true,
+        'private_dining': true,
+        'yoga_sessions': true,
+        'bonfire': true
+      },
+      'images': [
+        'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=800',
+        'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800',
+        'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=800'
+      ],
+      'is_active': true
+    },
+
+    // Boutique Hotels
+    {
+      'name': 'Heritage Haveli Romance',
+      'description': 'Charming heritage property with traditional architecture, antique furnishings, and modern comforts. Experience royal hospitality with personalized service, rooftop dining, and cultural performances.',
+      'city': 'Jaipur',
+      'address': 'MI Road, Pink City, Jaipur, Rajasthan 302001',
+      'lat': 26.9124,
+      'lng': 75.7873,
+      'star_rating': 4,
+      'couple_rating': 4.6,
+      'price_per_night': 8500,
+      'privacy_assured': true,
+      'category': 'boutique',
+      'amenities': {
+        'wifi': true,
+        'pool': true,
+        'restaurant': true,
+        'bar': true,
+        'room_service': true,
+        'parking': true,
+        'rooftop_dining': true,
+        'cultural_shows': true,
+        'couples_massage': true,
+        'heritage_tours': true
+      },
+      'images': [
+        'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=800',
+        'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800',
+        'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800'
+      ],
+      'is_active': true
+    },
+    {
+      'name': 'Coastal Charm Boutique',
+      'description': 'Intimate beachside boutique hotel with just 12 rooms, each uniquely designed. Enjoy personalized attention, private beach access, and romantic sunset cruises. Perfect for couples seeking exclusivity.',
+      'city': 'Pondicherry',
+      'address': 'Beach Road, White Town, Pondicherry 605001',
+      'lat': 11.9416,
+      'lng': 79.8083,
+      'star_rating': 4,
+      'couple_rating': 4.7,
+      'price_per_night': 9500,
+      'privacy_assured': true,
+      'category': 'boutique',
+      'amenities': {
+        'wifi': true,
+        'restaurant': true,
+        'bar': true,
+        'room_service': true,
+        'parking': true,
+        'beach_access': true,
+        'sunset_cruise': true,
+        'couples_massage': true,
+        'private_dining': true,
+        'bicycle_rental': true
+      },
+      'images': [
+        'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800',
+        'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800',
+        'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=800'
+      ],
+      'is_active': true
+    },
+
+    // Mid-Range Hotels
+    {
+      'name': 'Garden View Romantic Inn',
+      'description': 'Peaceful garden hotel with spacious rooms, beautiful landscaping, and romantic gazebos. Enjoy complimentary breakfast, evening tea service, and access to nearby attractions. Great value for couples.',
+      'city': 'Ooty',
+      'address': 'Charring Cross, Ooty, Tamil Nadu 643001',
+      'lat': 11.4102,
+      'lng': 76.6950,
+      'star_rating': 3,
+      'couple_rating': 4.4,
+      'price_per_night': 5500,
+      'privacy_assured': true,
+      'category': 'mid-range',
+      'amenities': {
+        'wifi': true,
+        'restaurant': true,
+        'room_service': true,
+        'parking': true,
+        'garden': true,
+        'complimentary_breakfast': true,
+        'tea_service': true,
+        'gazebo': true,
+        'bonfire': true
+      },
+      'images': [
+        'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800',
+        'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800',
+        'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=800'
+      ],
+      'is_active': true
+    },
+    {
+      'name': 'Lakeside Serenity Hotel',
+      'description': 'Tranquil lakeside property offering rooms with lake views, boat rides, and peaceful surroundings. Perfect for couples seeking a quiet getaway with nature walks, bird watching, and romantic picnics.',
+      'city': 'Nainital',
+      'address': 'Mall Road, Nainital, Uttarakhand 263001',
+      'lat': 29.3803,
+      'lng': 79.4636,
+      'star_rating': 3,
+      'couple_rating': 4.5,
+      'price_per_night': 6000,
+      'privacy_assured': true,
+      'category': 'mid-range',
+      'amenities': {
+        'wifi': true,
+        'restaurant': true,
+        'room_service': true,
+        'parking': true,
+        'lake_view': true,
+        'boat_rides': true,
+        'complimentary_breakfast': true,
+        'nature_walks': true,
+        'picnic_arrangements': true
+      },
+      'images': [
+        'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=800',
+        'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800',
+        'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=800'
+      ],
+      'is_active': true
+    },
+    {
+      'name': 'City Lights Romance Hotel',
+      'description': 'Modern urban hotel in the heart of the city with rooftop restaurant, city views, and easy access to shopping and entertainment. Ideal for couples who want romance with convenience.',
+      'city': 'Mumbai',
+      'address': 'Colaba Causeway, Mumbai, Maharashtra 400001',
+      'lat': 18.9220,
+      'lng': 72.8347,
+      'star_rating': 4,
+      'couple_rating': 4.3,
+      'price_per_night': 7500,
+      'privacy_assured': true,
+      'category': 'mid-range',
+      'amenities': {
+        'wifi': true,
+        'restaurant': true,
+        'bar': true,
+        'gym': true,
+        'room_service': true,
+        'parking': true,
+        'rooftop_dining': true,
+        'city_view': true,
+        'concierge': true
+      },
+      'images': [
+        'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800',
+        'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800',
+        'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800'
+      ],
+      'is_active': true
+    },
+
+    // Budget-Friendly Hotels
+    {
+      'name': 'Cozy Nest Budget Stay',
+      'description': 'Clean, comfortable, and affordable accommodation perfect for young couples. Features cozy rooms, friendly staff, and all essential amenities. Great location with easy access to local attractions.',
+      'city': 'Bangalore',
+      'address': 'MG Road, Bangalore, Karnataka 560001',
+      'lat': 12.9716,
+      'lng': 77.5946,
+      'star_rating': 3,
+      'couple_rating': 4.2,
+      'price_per_night': 3500,
+      'privacy_assured': true,
+      'category': 'budget',
+      'amenities': {
+        'wifi': true,
+        'restaurant': true,
+        'room_service': true,
+        'parking': true,
+        'complimentary_breakfast': true,
+        'laundry': true
+      },
+      'images': [
+        'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800',
+        'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800',
+        'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=800'
+      ],
+      'is_active': true
+    },
+    {
+      'name': 'Hillside Budget Retreat',
+      'description': 'Affordable hillside property with stunning valley views, basic but comfortable rooms, and warm hospitality. Perfect for budget-conscious couples who want a romantic mountain escape.',
+      'city': 'Shimla',
+      'address': 'The Mall Road, Shimla, Himachal Pradesh 171001',
+      'lat': 31.1048,
+      'lng': 77.1734,
+      'star_rating': 2,
+      'couple_rating': 4.1,
+      'price_per_night': 2800,
+      'privacy_assured': true,
+      'category': 'budget',
+      'amenities': {
+        'wifi': true,
+        'restaurant': true,
+        'room_service': true,
+        'parking': true,
+        'mountain_view': true,
+        'complimentary_breakfast': true,
+        'bonfire': true
+      },
+      'images': [
+        'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=800',
+        'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=800',
+        'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800'
+      ],
+      'is_active': true
+    },
+
+    // Specialty/Unique Hotels
+    {
+      'name': 'Treehouse Romance Escape',
+      'description': 'Unique treehouse accommodations nestled in lush forest canopy. Experience nature like never before with luxury amenities, private decks, and bird watching. An unforgettable romantic adventure.',
+      'city': 'Wayanad',
+      'address': 'Vythiri, Wayanad, Kerala 673576',
+      'lat': 11.5854,
+      'lng': 76.0527,
+      'star_rating': 4,
+      'couple_rating': 4.8,
+      'price_per_night': 12000,
+      'privacy_assured': true,
+      'category': 'unique',
+      'amenities': {
+        'wifi': true,
+        'restaurant': true,
+        'room_service': true,
+        'parking': true,
+        'nature_walks': true,
+        'bird_watching': true,
+        'private_deck': true,
+        'complimentary_breakfast': true,
+        'jungle_safari': true
+      },
+      'images': [
+        'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800',
+        'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=800',
+        'https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=800'
+      ],
+      'is_active': true
+    },
+    {
+      'name': 'Desert Dunes Romantic Camp',
+      'description': 'Luxury desert camping experience with air-conditioned tents, traditional Rajasthani hospitality, camel safaris, and cultural performances under the stars. A magical desert romance.',
+      'city': 'Jaisalmer',
+      'address': 'Sam Sand Dunes, Jaisalmer, Rajasthan 345001',
+      'lat': 26.9157,
+      'lng': 70.9083,
+      'star_rating': 4,
+      'couple_rating': 4.6,
+      'price_per_night': 10000,
+      'privacy_assured': true,
+      'category': 'unique',
+      'amenities': {
+        'wifi': false,
+        'restaurant': true,
+        'room_service': true,
+        'parking': true,
+        'camel_safari': true,
+        'cultural_shows': true,
+        'bonfire': true,
+        'stargazing': true,
+        'desert_view': true
+      },
+      'images': [
+        'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=800',
+        'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800',
+        'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800'
+      ],
+      'is_active': true
+    },
+    {
+      'name': 'Houseboat Honeymoon Haven',
+      'description': 'Traditional Kerala houseboat with modern amenities, private chef, and serene backwater cruises. Float through palm-fringed canals, enjoy fresh seafood, and experience ultimate privacy on water.',
+      'city': 'Alleppey',
+      'address': 'Vembanad Lake, Alleppey, Kerala 688001',
+      'lat': 9.4981,
+      'lng': 76.3388,
+      'star_rating': 4,
+      'couple_rating': 4.9,
+      'price_per_night': 14000,
+      'privacy_assured': true,
+      'category': 'unique',
+      'amenities': {
+        'wifi': false,
+        'private_chef': true,
+        'room_service': true,
+        'backwater_cruise': true,
+        'fishing': true,
+        'sunset_viewing': true,
+        'traditional_meals': true,
+        'complete_privacy': true
+      },
+      'images': [
+        'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=800',
+        'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800',
+        'https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=800'
+      ],
+      'is_active': true
+    },
+    {
+      'name': 'Wine Valley Romance Resort',
+      'description': 'Boutique resort in wine country offering vineyard tours, wine tasting sessions, gourmet dining, and rooms with valley views. Perfect for couples who appreciate fine wine and scenic beauty.',
+      'city': 'Nashik',
+      'address': 'Sula Vineyards Road, Nashik, Maharashtra 422222',
+      'lat': 20.0059,
+      'lng': 73.7897,
+      'star_rating': 4,
+      'couple_rating': 4.5,
+      'price_per_night': 11000,
+      'privacy_assured': true,
+      'category': 'boutique',
+      'amenities': {
+        'wifi': true,
+        'pool': true,
+        'restaurant': true,
+        'bar': true,
+        'room_service': true,
+        'parking': true,
+        'wine_tasting': true,
+        'vineyard_tours': true,
+        'gourmet_dining': true,
+        'valley_view': true
+      },
+      'images': [
+        'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800',
+        'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800',
+        'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=800'
+      ],
+      'is_active': true
+    },
+    {
+      'name': 'Colonial Charm Heritage Hotel',
+      'description': 'Restored colonial-era mansion with period furniture, manicured gardens, and old-world charm. Experience history with modern comforts, high tea service, and romantic garden walks.',
+      'city': 'Darjeeling',
+      'address': 'Observatory Hill Road, Darjeeling, West Bengal 734101',
+      'lat': 27.0410,
+      'lng': 88.2663,
+      'star_rating': 4,
+      'couple_rating': 4.6,
+      'price_per_night': 9000,
+      'privacy_assured': true,
+      'category': 'heritage',
+      'amenities': {
+        'wifi': true,
+        'restaurant': true,
+        'bar': true,
+        'room_service': true,
+        'parking': true,
+        'garden': true,
+        'high_tea': true,
+        'mountain_view': true,
+        'fireplace': true,
+        'library': true
+      },
+      'images': [
+        'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=800',
+        'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800',
+        'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800'
+      ],
+      'is_active': true
+    }
+  ];
+
+  try {
+    final response = await http.post(
+      Uri.parse('$baseUrl/api/database/records/hotels'),
+      headers: {
+        'Authorization': 'Bearer $accessToken',
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation'
+      },
+      body: jsonEncode(hotels),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print('✅ Successfully inserted ${hotels.length} hotels!');
+      print('\nResponse: ${response.body}');
+    } else {
+      print('❌ Failed to insert hotels');
+      print('Status Code: ${response.statusCode}');
+      print('Response: ${response.body}');
+    }
+  } catch (e) {
+    print('❌ Error: $e');
+  }
+}
