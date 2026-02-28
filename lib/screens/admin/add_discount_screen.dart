@@ -206,14 +206,21 @@ class _AddDiscountScreenState extends State<AddDiscountScreen> {
                     ),
                     trailing: const Icon(Icons.edit),
                     onTap: () async {
+                      final now = DateTime.now();
+                      final today = DateTime(now.year, now.month, now.day);
                       final date = await showDatePicker(
                         context: context,
-                        initialDate: _validFrom ?? DateTime.now(),
-                        firstDate: DateTime.now(),
-                        lastDate: DateTime.now().add(const Duration(days: 365)),
+                        initialDate: _validFrom != null && !_validFrom!.isBefore(today) ? _validFrom! : today,
+                        firstDate: today,
+                        lastDate: today.add(const Duration(days: 365)),
                       );
                       if (date != null) {
-                        setState(() => _validFrom = date);
+                        setState(() {
+                           _validFrom = date;
+                           if (_validTo != null && _validTo!.isBefore(_validFrom!)) {
+                             _validTo = _validFrom!.add(const Duration(days: 1));
+                           }
+                        });
                       }
                     },
                   ),
@@ -228,11 +235,15 @@ class _AddDiscountScreenState extends State<AddDiscountScreen> {
                     ),
                     trailing: const Icon(Icons.edit),
                     onTap: () async {
+                      final now = DateTime.now();
+                      final today = DateTime(now.year, now.month, now.day);
+                      final minDate = _validFrom ?? today;
+                      
                       final date = await showDatePicker(
                         context: context,
-                        initialDate: _validTo ?? DateTime.now().add(const Duration(days: 30)),
-                        firstDate: _validFrom ?? DateTime.now(),
-                        lastDate: DateTime.now().add(const Duration(days: 365)),
+                        initialDate: _validTo != null && !_validTo!.isBefore(minDate) ? _validTo! : minDate.add(const Duration(days: 30)),
+                        firstDate: minDate,
+                        lastDate: today.add(const Duration(days: 365)),
                       );
                       if (date != null) {
                         setState(() => _validTo = date);

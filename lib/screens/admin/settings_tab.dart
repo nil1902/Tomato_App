@@ -14,13 +14,20 @@ class _SettingsTabState extends State<SettingsTab> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
+    return Container(
+      color: Colors.transparent,
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          const Text(
+            'System Settings',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 24),
+          Expanded(
+            child: ListView(
+              children: [
           _buildSection(
             'App Configuration',
             [
@@ -132,7 +139,10 @@ class _SettingsTabState extends State<SettingsTab> {
               ),
             ],
           ),
-        ],
+             ],
+           ),
+         ),
+       ],
       ),
     );
   }

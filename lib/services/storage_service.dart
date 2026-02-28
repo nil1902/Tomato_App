@@ -16,14 +16,14 @@ class StorageService {
   /// Upload a file to InsForge storage bucket
   /// Returns the public URL of the uploaded file
   Future<String?> uploadFile({
-    required File file,
+    required dynamic file,
     required String bucketName,
     String? fileName,
   }) async {
     try {
       // Generate filename if not provided
       final String finalFileName = fileName ?? 
-          '${DateTime.now().millisecondsSinceEpoch}_${path.basename(file.path)}';
+          '${DateTime.now().millisecondsSinceEpoch}_${file.name}';
       
       debugPrint('📤 Uploading file: $finalFileName to bucket: $bucketName');
 
@@ -31,15 +31,15 @@ class StorageService {
       final bytes = await file.readAsBytes();
       
       // Determine content type based on file extension
-      final extension = path.extension(file.path).toLowerCase();
+      final extension = file.name.split('.').last.toLowerCase();
       String contentType = 'application/octet-stream';
-      if (extension == '.jpg' || extension == '.jpeg') {
+      if (extension == 'jpg' || extension == 'jpeg') {
         contentType = 'image/jpeg';
-      } else if (extension == '.png') {
+      } else if (extension == 'png') {
         contentType = 'image/png';
-      } else if (extension == '.gif') {
+      } else if (extension == 'gif') {
         contentType = 'image/gif';
-      } else if (extension == '.webp') {
+      } else if (extension == 'webp') {
         contentType = 'image/webp';
       }
 

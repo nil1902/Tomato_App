@@ -45,16 +45,21 @@ class UserProfileService {
       );
       
       debugPrint('📱 Get Profile by Email Response: ${response.statusCode}');
+      debugPrint('📱 Response body: ${response.body}');
+      debugPrint('📱 Response length: ${response.body.length}');
       
       if (response.statusCode == 200) {
+        debugPrint('📱 About to decode profile response...');
         final data = jsonDecode(response.body);
+        debugPrint('📱 Profile decode successful!');
         if (data is List && data.isNotEmpty) {
           return data[0];
         }
       }
       return null;
-    } catch (e) {
+    } catch (e, stackTrace) {
       debugPrint('📱 Get Profile by Email Error: $e');
+      debugPrint('📱 Stack trace: $stackTrace');
       return null;
     }
   }

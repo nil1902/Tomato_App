@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.lovenest.app"
-    compileSdk = 35  // Android 16
+    compileSdk = 36  // Android 16 - Updated for plugin compatibility
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -21,7 +21,7 @@ android {
     defaultConfig {
         applicationId = "com.lovenest.app"
         minSdk = 24  // Android 7.0 (minimum for most features)
-        targetSdk = 35  // Android 16
+        targetSdk = 36  // Android 16 - Updated for plugin compatibility
         versionCode = 1
         versionName = "1.0.0"
         multiDexEnabled = true

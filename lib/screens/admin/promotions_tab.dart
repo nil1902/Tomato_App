@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../services/auth_service.dart';
+import '../../services/admin_service.dart';
 
 /// Promotions Tab - Manage banners, popups, discounts, and advertisements
 class PromotionsTab extends StatefulWidget {
@@ -10,16 +13,46 @@ class PromotionsTab extends StatefulWidget {
 
 class _PromotionsTabState extends State<PromotionsTab> {
   int _selectedType = 0; // 0: Banners, 1: Popups, 2: Coupons
+  int _refreshKey = 0;
+
+  void _triggerRefresh() {
+    setState(() {
+      _refreshKey++;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Promotions'),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(48),
-          child: Container(
-            color: Colors.white,
+    return Container(
+      color: Colors.transparent,
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              const Text(
+                'Promotions & Coupons',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              const Spacer(),
+              ElevatedButton.icon(
+                onPressed: () => _showAddDialog(),
+                icon: const Icon(Icons.add),
+                label: Text(_getAddButtonLabel()),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.grey[200]!),
+            ),
             child: Row(
               children: [
                 _buildTypeTab('Banners', 0),
@@ -28,20 +61,23 @@ class _PromotionsTabState extends State<PromotionsTab> {
               ],
             ),
           ),
-        ),
-      ),
-      body: IndexedStack(
-        index: _selectedType,
-        children: const [
-          _BannersView(),
-          _PopupsView(),
-          _CouponsView(),
+          const SizedBox(height: 16),
+          Expanded(
+            child: Card(
+              elevation: 1,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              child: IndexedStack(
+                key: ValueKey(_refreshKey),
+                index: _selectedType,
+                children: const [
+                  _BannersView(),
+                  _PopupsView(),
+                  _CouponsView(),
+                ],
+              ),
+            ),
+          ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _showAddDialog(),
-        icon: const Icon(Icons.add),
-        label: Text(_getAddButtonLabel()),
       ),
     );
   }
@@ -102,24 +138,36 @@ class _PromotionsTabState extends State<PromotionsTab> {
   }
 
   void _showAddBannerDialog() {
+    final titleController = TextEditingController();
+    final descController = TextEditingController();
+    final imageUrlController = TextEditingController();
+    
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Add Banner'),
-        content: const SingleChildScrollView(
+        content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
-                decoration: InputDecoration(labelText: 'Banner Title'),
+                controller: titleController,
+                decoration: const InputDecoration(labelText: 'Banner Title'),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextField(
-                decoration: InputDecoration(labelText: 'Description'),
+                controller: descController,
+                decoration: const InputDecoration(labelText: 'Description'),
                 maxLines: 2,
               ),
-              SizedBox(height: 16),
-              Text('Image upload feature coming soon!'),
+              const SizedBox(height: 16),
+              TextField(
+                controller: imageUrlController,
+                decoration: const InputDecoration(
+                  labelText: 'Image URL',
+                  hintText: 'https://example.com/image.png'
+                ),
+              ),
             ],
           ),
         ),
@@ -129,11 +177,34 @@ class _PromotionsTabState extends State<PromotionsTab> {
             child: const Text('Cancel'),
           ),
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Banner creation coming soon!')),
-              );
+              final auth = context.read<AuthService>();
+              final admin = AdminService(auth.accessToken!);
+              
+              try {
+                await admin.addBanner({
+                  'title': titleController.text,
+                  'description': descController.text,
+                  'is_active': true,
+                  'image_url': imageUrlController.text.isNotEmpty 
+                      ? imageUrlController.text 
+                      : 'https://placehold.co/600x400/png'
+                });
+                
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Banner created successfully!')),
+                  );
+                  _triggerRefresh();
+                }
+              } catch (e) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Failed: $e')),
+                  );
+                }
+              }
             },
             child: const Text('Create'),
           ),
@@ -143,24 +214,27 @@ class _PromotionsTabState extends State<PromotionsTab> {
   }
 
   void _showAddPopupDialog() {
+    final titleController = TextEditingController();
+    final discountController = TextEditingController();
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Add Discount Popup'),
-        content: const SingleChildScrollView(
+        content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
-                decoration: InputDecoration(labelText: 'Popup Title'),
+                controller: titleController,
+                decoration: const InputDecoration(labelText: 'Popup Title'),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextField(
-                decoration: InputDecoration(labelText: 'Discount %'),
+                controller: discountController,
+                decoration: const InputDecoration(labelText: 'Discount %'),
                 keyboardType: TextInputType.number,
               ),
-              SizedBox(height: 16),
-              Text('Image upload feature coming soon!'),
             ],
           ),
         ),
@@ -170,11 +244,31 @@ class _PromotionsTabState extends State<PromotionsTab> {
             child: const Text('Cancel'),
           ),
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Popup creation coming soon!')),
-              );
+              final auth = context.read<AuthService>();
+              final admin = AdminService(auth.accessToken!);
+              
+              try {
+                await admin.addPopup({
+                  'title': titleController.text,
+                  'discount_percent': int.tryParse(discountController.text) ?? 10,
+                  'is_active': true,
+                });
+                
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Popup created successfully!')),
+                  );
+                  _triggerRefresh();
+                }
+              } catch (e) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Failed: $e')),
+                  );
+                }
+              }
             },
             child: const Text('Create'),
           ),
@@ -184,25 +278,32 @@ class _PromotionsTabState extends State<PromotionsTab> {
   }
 
   void _showAddCouponDialog() {
+    final codeController = TextEditingController();
+    final discountController = TextEditingController();
+    final minOrderController = TextEditingController();
+    
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Add Coupon Code'),
-        content: const SingleChildScrollView(
+        content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
-                decoration: InputDecoration(labelText: 'Coupon Code'),
+                controller: codeController,
+                decoration: const InputDecoration(labelText: 'Coupon Code (e.g. SUMMER50)'),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextField(
-                decoration: InputDecoration(labelText: 'Discount %'),
+                controller: discountController,
+                decoration: const InputDecoration(labelText: 'Discount % (e.g. 15)'),
                 keyboardType: TextInputType.number,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextField(
-                decoration: InputDecoration(labelText: 'Min Order Value'),
+                controller: minOrderController,
+                decoration: const InputDecoration(labelText: 'Min Order Value (₹)'),
                 keyboardType: TextInputType.number,
               ),
             ],
@@ -214,11 +315,31 @@ class _PromotionsTabState extends State<PromotionsTab> {
             child: const Text('Cancel'),
           ),
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Coupon creation coming soon!')),
-              );
+              final auth = context.read<AuthService>();
+              final admin = AdminService(auth.accessToken!);
+              
+              try {
+                await admin.addDiscount({
+                  'code': codeController.text.toUpperCase(),
+                  'discount_percent': int.tryParse(discountController.text) ?? 5,
+                  'min_order_amount': int.tryParse(minOrderController.text) ?? 0,
+                  'is_active': true,
+                });
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Coupon created successfully!')),
+                  );
+                  _triggerRefresh();
+                }
+              } catch (e) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Failed: $e')),
+                  );
+                }
+              }
             },
             child: const Text('Create'),
           ),
@@ -229,82 +350,265 @@ class _PromotionsTabState extends State<PromotionsTab> {
 }
 
 // Banners View
-class _BannersView extends StatelessWidget {
+class _BannersView extends StatefulWidget {
   const _BannersView();
 
   @override
+  State<_BannersView> createState() => _BannersViewState();
+}
+
+class _BannersViewState extends State<_BannersView> {
+  List<Map<String, dynamic>> _banners = [];
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    final auth = context.read<AuthService>();
+    if (auth.accessToken == null) return;
+    final admin = AdminService(auth.accessToken!);
+    final banners = await admin.getBanners();
+    if (mounted) {
+      setState(() {
+        _banners = banners;
+        _loading = false;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.image, size: 64, color: Colors.grey[400]),
-          const SizedBox(height: 16),
-          Text(
-            'No banners yet',
-            style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+    if (_loading) return const Center(child: CircularProgressIndicator());
+    if (_banners.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.image, size: 64, color: Colors.grey[400]),
+            const SizedBox(height: 16),
+            Text('No banners yet', style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+          ],
+        ),
+      );
+    }
+
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: _banners.length,
+      itemBuilder: (context, index) {
+        final banner = _banners[index];
+        final isActive = banner['is_active'] == true;
+        return Card(
+          margin: const EdgeInsets.only(bottom: 12),
+          child: ListTile(
+            leading: banner['image_url'] != null
+                ? Image.network(banner['image_url'], width: 60, height: 60, fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => const Icon(Icons.image, size: 40))
+                : const Icon(Icons.image, size: 40),
+            title: Text(banner['title'] ?? 'Untitled Banner', style: const TextStyle(fontWeight: FontWeight.bold)),
+            subtitle: Text(banner['description'] ?? 'No description'),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Switch(
+                  value: isActive,
+                  onChanged: (val) async {
+                    final admin = AdminService(context.read<AuthService>().accessToken!);
+                    await admin.updateBannerStatus(banner['id'], val);
+                    _loadData();
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.delete, color: Colors.red),
+                  onPressed: () async {
+                    final admin = AdminService(context.read<AuthService>().accessToken!);
+                    await admin.deleteBanner(banner['id']);
+                    _loadData();
+                  },
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            'Create banners to show on homepage',
-            style: TextStyle(fontSize: 12, color: Colors.grey[500]),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
 
 // Popups View
-class _PopupsView extends StatelessWidget {
+class _PopupsView extends StatefulWidget {
   const _PopupsView();
 
   @override
+  State<_PopupsView> createState() => _PopupsViewState();
+}
+
+class _PopupsViewState extends State<_PopupsView> {
+  List<Map<String, dynamic>> _popups = [];
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    final auth = context.read<AuthService>();
+    if (auth.accessToken == null) return;
+    final admin = AdminService(auth.accessToken!);
+    final popups = await admin.getPopups();
+    if (mounted) {
+      setState(() {
+        _popups = popups;
+        _loading = false;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.campaign, size: 64, color: Colors.grey[400]),
-          const SizedBox(height: 16),
-          Text(
-            'No popups yet',
-            style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+    if (_loading) return const Center(child: CircularProgressIndicator());
+    if (_popups.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.campaign, size: 64, color: Colors.grey[400]),
+            const SizedBox(height: 16),
+            Text('No popups yet', style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+          ],
+        ),
+      );
+    }
+
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: _popups.length,
+      itemBuilder: (context, index) {
+        final popup = _popups[index];
+        final isActive = popup['is_active'] == true;
+        return Card(
+          margin: const EdgeInsets.only(bottom: 12),
+          child: ListTile(
+            leading: const Icon(Icons.campaign, size: 40, color: Colors.orange),
+            title: Text(popup['title'] ?? 'Untitled Popup', style: const TextStyle(fontWeight: FontWeight.bold)),
+            subtitle: Text('${popup['discount_percent'] ?? 0}% Discount'),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Switch(
+                  value: isActive,
+                  onChanged: (val) async {
+                    final admin = AdminService(context.read<AuthService>().accessToken!);
+                    await admin.updatePopupStatus(popup['id'], val);
+                    _loadData();
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.delete, color: Colors.red),
+                  onPressed: () async {
+                    final admin = AdminService(context.read<AuthService>().accessToken!);
+                    await admin.deletePopup(popup['id']);
+                    _loadData();
+                  },
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            'Create discount popups for users',
-            style: TextStyle(fontSize: 12, color: Colors.grey[500]),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
 
 // Coupons View
-class _CouponsView extends StatelessWidget {
+class _CouponsView extends StatefulWidget {
   const _CouponsView();
 
   @override
+  State<_CouponsView> createState() => _CouponsViewState();
+}
+
+class _CouponsViewState extends State<_CouponsView> {
+  List<Map<String, dynamic>> _coupons = [];
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    final auth = context.read<AuthService>();
+    if (auth.accessToken == null) return;
+    final admin = AdminService(auth.accessToken!);
+    final discounts = await admin.getDiscounts();
+    if (mounted) {
+      setState(() {
+        _coupons = discounts;
+        _loading = false;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.local_offer, size: 64, color: Colors.grey[400]),
-          const SizedBox(height: 16),
-          Text(
-            'No coupons yet',
-            style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+    if (_loading) return const Center(child: CircularProgressIndicator());
+    if (_coupons.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.local_offer, size: 64, color: Colors.grey[400]),
+            const SizedBox(height: 16),
+            Text('No coupons yet', style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+          ],
+        ),
+      );
+    }
+
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: _coupons.length,
+      itemBuilder: (context, index) {
+        final coupon = _coupons[index];
+        final isActive = coupon['is_active'] == true;
+        return Card(
+          margin: const EdgeInsets.only(bottom: 12),
+          child: ListTile(
+            leading: const Icon(Icons.local_offer, size: 40, color: Colors.green),
+            title: Text(coupon['code']?.toString().toUpperCase() ?? 'UNKNOWN', style: const TextStyle(fontWeight: FontWeight.bold, letterSpacing: 2)),
+            subtitle: Text('${coupon['discount_percent'] ?? 0}% off | Min order: ₹${coupon['min_order_amount'] ?? 0}'),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Switch(
+                  value: isActive,
+                  onChanged: (val) async {
+                    final admin = AdminService(context.read<AuthService>().accessToken!);
+                    await admin.updateDiscountStatus(coupon['id'], val);
+                    _loadData();
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.delete, color: Colors.red),
+                  onPressed: () async {
+                    final admin = AdminService(context.read<AuthService>().accessToken!);
+                    await admin.deleteDiscount(coupon['id']);
+                    _loadData();
+                  },
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            'Create coupon codes for discounts',
-            style: TextStyle(fontSize: 12, color: Colors.grey[500]),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

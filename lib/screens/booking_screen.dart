@@ -63,18 +63,20 @@ class _BookingScreenState extends State<BookingScreen> {
                     title: 'Check In',
                     date: _checkInDate,
                     onTap: () async {
+                      final now = DateTime.now();
+                      final today = DateTime(now.year, now.month, now.day);
                       final selected = await showDatePicker(
                         context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime.now(),
-                        lastDate: DateTime.now().add(const Duration(days: 365)),
+                        initialDate: _checkInDate ?? today,
+                        firstDate: today,
+                        lastDate: today.add(const Duration(days: 365)),
                         builder: (context, child) {
                           return Theme(
                             data: Theme.of(context).copyWith(
                               colorScheme: ColorScheme.light(
-                                primary: AppColors.primary, // header background color
-                                onPrimary: Colors.white, // header text color
-                                onSurface: isDark ? Colors.white : Colors.black, // body text color
+                                primary: AppColors.primary,
+                                onPrimary: Colors.white,
+                                onSurface: isDark ? Colors.white : Colors.black,
                               ),
                             ),
                             child: child!,
@@ -82,7 +84,13 @@ class _BookingScreenState extends State<BookingScreen> {
                         }
                       );
                       if (selected != null) {
-                        setState(() => _checkInDate = selected);
+                        setState(() {
+                          _checkInDate = selected;
+                          // Reset check-out date if it is now before or same as check-in
+                          if (_checkOutDate != null && !_checkOutDate!.isAfter(_checkInDate!)) {
+                             _checkOutDate = _checkInDate!.add(const Duration(days: 1));
+                          }
+                        });
                       }
                     },
                   ),
@@ -93,11 +101,30 @@ class _BookingScreenState extends State<BookingScreen> {
                     title: 'Check Out',
                     date: _checkOutDate,
                     onTap: () async {
+                      final now = DateTime.now();
+                      final today = DateTime(now.year, now.month, now.day);
+                      final checkIn = _checkInDate ?? today;
+                      final minCheckOut = checkIn.add(const Duration(days: 1));
+                      
                       final selected = await showDatePicker(
                         context: context,
-                        initialDate: _checkInDate?.add(const Duration(days: 1)) ?? DateTime.now().add(const Duration(days: 1)),
-                        firstDate: _checkInDate?.add(const Duration(days: 1)) ?? DateTime.now(),
-                        lastDate: DateTime.now().add(const Duration(days: 365)),
+                        initialDate: _checkOutDate != null && _checkOutDate!.isAfter(minCheckOut) 
+                            ? _checkOutDate! 
+                            : minCheckOut,
+                        firstDate: minCheckOut,
+                        lastDate: minCheckOut.add(const Duration(days: 365)),
+                        builder: (context, child) {
+                          return Theme(
+                            data: Theme.of(context).copyWith(
+                              colorScheme: ColorScheme.light(
+                                primary: AppColors.primary,
+                                onPrimary: Colors.white,
+                                onSurface: isDark ? Colors.white : Colors.black,
+                              ),
+                            ),
+                            child: child!,
+                          );
+                        }
                       );
                       if (selected != null) {
                         setState(() => _checkOutDate = selected);

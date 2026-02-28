@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../services/auth_service.dart';
 import '../../services/admin_service.dart';
+import 'forms/hotel_form_screen.dart';
 
 /// Hotels Tab - Manage all hotels
 class HotelsTab extends StatefulWidget {
@@ -48,78 +49,120 @@ class _HotelsTabState extends State<HotelsTab> {
 
   @override
   Widget build(BuildContext context) {
+    if (_loading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    final isDesktop = MediaQuery.of(context).size.width >= 800;
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Hotels Management'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _loadHotels,
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          // Search Bar
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Search hotels...',
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                filled: true,
-                fillColor: Colors.grey[100],
-              ),
-              onChanged: (value) {
-                setState(() => _searchQuery = value);
-              },
-            ),
-          ),
-          
-          // Hotels List
-          Expanded(
-            child: _loading
-                ? const Center(child: CircularProgressIndicator())
-                : _filteredHotels.isEmpty
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.hotel_outlined, size: 64, color: Colors.grey[400]),
-                            const SizedBox(height: 16),
-                            Text(
-                              _searchQuery.isEmpty ? 'No hotels found' : 'No matching hotels',
-                              style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-                            ),
-                          ],
-                        ),
-                      )
-                    : RefreshIndicator(
-                        onRefresh: _loadHotels,
-                        child: ListView.builder(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          itemCount: _filteredHotels.length,
-                          itemBuilder: (context, index) {
-                            final hotel = _filteredHotels[index];
-                            return _buildHotelCard(hotel);
-                          },
-                        ),
+      backgroundColor: Colors.transparent,
+      body: Container(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Header actions
+            Row(
+              children: [
+                Expanded(
+                  flex: isDesktop ? 1 : 2,
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Search hotels...',
+                      prefixIcon: const Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          // TODO: Navigate to add hotel screen
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Add Hotel feature coming soon!')),
-          );
-        },
-        icon: const Icon(Icons.add),
-        label: const Text('Add Hotel'),
+                      filled: true,
+                      fillColor: Colors.white,
+                    ),
+                    onChanged: (value) {
+                      setState(() => _searchQuery = value);
+                    },
+                  ),
+                ),
+                if (isDesktop) const Spacer(flex: 2),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const HotelFormScreen()),
+                    ).then((saved) {
+                      if (saved == true) _loadHotels();
+                    });
+                  },
+                  icon: const Icon(Icons.add),
+                  label: const Text('Add Hotel'),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                IconButton(
+                  icon: const Icon(Icons.refresh),
+                  onPressed: _loadHotels,
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+            
+            // Hotels List
+            Expanded(
+              child: _filteredHotels.isEmpty
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.hotel_outlined, size: 64, color: Colors.grey[400]),
+                          const SizedBox(height: 16),
+                          Text(
+                            _searchQuery.isEmpty ? 'No hotels found' : 'No matching hotels',
+                            style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                          ),
+                        ],
+                      ),
+                    )
+                  : Card(
+                      elevation: 1,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      child: isDesktop 
+                          ? ListView(
+                              children: [
+                                PaginatedDataTable(
+                                  header: const Text('Hotels Listing'),
+                                  rowsPerPage: _filteredHotels.length > 10 ? 10 : (_filteredHotels.isEmpty ? 1 : _filteredHotels.length),
+                                  columnSpacing: 20,
+                                  source: _HotelDataTableSource(
+                                    _filteredHotels,
+                                    _showHotelOptions,
+                                  ),
+                                  columns: const [
+                                    DataColumn(label: Text('Image')),
+                                    DataColumn(label: Text('Hotel Name')),
+                                    DataColumn(label: Text('Location')),
+                                    DataColumn(label: Text('Price')),
+                                    DataColumn(label: Text('Rating')),
+                                    DataColumn(label: Text('Actions')),
+                                  ],
+                                )
+                              ],
+                            )
+                          : RefreshIndicator(
+                              onRefresh: _loadHotels,
+                              child: ListView.builder(
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                itemCount: _filteredHotels.length,
+                                itemBuilder: (context, index) {
+                                  final hotel = _filteredHotels[index];
+                                  return _buildHotelCard(hotel);
+                                },
+                              ),
+                            ),
+                    ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -248,9 +291,12 @@ class _HotelsTabState extends State<HotelsTab> {
               title: const Text('Edit Hotel'),
               onTap: () {
                 Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Edit feature coming soon!')),
-                );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => HotelFormScreen(hotelToEdit: hotel)),
+                ).then((saved) {
+                  if (saved == true) _loadHotels();
+                });
               },
             ),
             ListTile(
@@ -366,4 +412,81 @@ class _HotelsTabState extends State<HotelsTab> {
       ),
     );
   }
+}
+
+class _HotelDataTableSource extends DataTableSource {
+  final List<dynamic> _hotels;
+  final Function(Map<String, dynamic>) _onRowTap;
+
+  _HotelDataTableSource(this._hotels, this._onRowTap);
+
+  @override
+  DataRow? getRow(int index) {
+    if (index >= _hotels.length) return null;
+    final hotel = _hotels[index] as Map<String, dynamic>;
+    
+    final name = hotel['name'] ?? 'Unknown Hotel';
+    final location = hotel['location'] ?? 'Unknown Location';
+    final price = hotel['price_per_night'] ?? 0;
+    final rating = hotel['rating']?.toDouble() ?? 0.0;
+    final images = hotel['image_urls'] as List<dynamic>?;
+    final imageUrl = images != null && images.isNotEmpty ? images[0] : null;
+
+    return DataRow(
+      cells: [
+        DataCell(
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: imageUrl != null
+                ? Image.network(
+                    imageUrl,
+                    width: 40,
+                    height: 40,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => Container(
+                      width: 40,
+                      height: 40,
+                      color: Colors.grey[300],
+                      child: const Icon(Icons.hotel, size: 20),
+                    ),
+                  )
+                : Container(
+                    width: 40,
+                    height: 40,
+                    color: Colors.grey[300],
+                    child: const Icon(Icons.hotel, size: 20),
+                  ),
+          ),
+        ),
+        DataCell(Text(name, style: const TextStyle(fontWeight: FontWeight.bold))),
+        DataCell(Text(location)),
+        DataCell(Text('₹$price/night', style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold))),
+        DataCell(
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.star, size: 16, color: Colors.amber[700]),
+              const SizedBox(width: 4),
+              Text(rating.toStringAsFixed(1)),
+            ],
+          ),
+        ),
+        DataCell(
+          IconButton(
+            icon: const Icon(Icons.more_vert),
+            onPressed: () => _onRowTap(hotel),
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  bool get isRowCountApproximate => false;
+
+  @override
+  int get rowCount => _hotels.length;
+
+  @override
+  int get selectedRowCount => 0;
 }

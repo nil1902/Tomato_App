@@ -136,8 +136,6 @@ class AuthService extends ChangeNotifier {
       );
       
       debugPrint('🔐 Login response: ${response.statusCode}');
-      debugPrint('🔐 Response body length: ${response.body.length}');
-      debugPrint('🔐 Response body preview: ${response.body.substring(0, response.body.length > 100 ? 100 : response.body.length)}');
       
       if (response.statusCode == 200 || response.statusCode == 201) {
         if (response.body.isEmpty) {
@@ -146,41 +144,34 @@ class AuthService extends ChangeNotifier {
         
         Map<String, dynamic> data;
         try {
-          // Get the raw body
-          String body = response.body.trim();
+          // Log raw response for debugging
+          debugPrint('🔐 Response Content-Type: ${response.headers['content-type']}');
+          debugPrint('🔐 Response body length: ${response.body.length}');
+          debugPrint('🔐 First 200 chars: ${response.body.substring(0, response.body.length > 200 ? 200 : response.body.length)}');
+          debugPrint('🔐 Response bytes: ${response.bodyBytes.sublist(0, response.bodyBytes.length > 50 ? 50 : response.bodyBytes.length)}');
+          debugPrint('🔐 About to decode...');
           
-          // Remove BOM (Byte Order Mark) if present
-          if (body.startsWith('\uFEFF')) {
-            body = body.substring(1);
-          }
+          // Decode the raw response body directly
+          data = jsonDecode(response.body);
           
-          // Remove any leading/trailing whitespace and control characters
-          body = body.replaceAll(RegExp(r'[\x00-\x1F\x7F]'), '');
-          
-          // Find the first { and last }
-          int jsonStart = body.indexOf('{');
-          int jsonEnd = body.lastIndexOf('}');
-          
-          if (jsonStart == -1 || jsonEnd == -1 || jsonStart > jsonEnd) {
-            debugPrint('🔐 No valid JSON found in response');
-            debugPrint('🔐 Full body: $body');
-            return 'Server returned invalid response format';
-          }
-          
-          // Extract only the JSON part
-          body = body.substring(jsonStart, jsonEnd + 1);
-          
-          debugPrint('🔐 Cleaned body: ${body.substring(0, body.length > 100 ? 100 : body.length)}');
-          
-          data = jsonDecode(body);
-        } catch (e) {
-          debugPrint('🔐 Parse error: $e');
-          debugPrint('🔐 Raw response: ${response.body}');
-          return 'Login failed - invalid response format';
+          debugPrint('🔐 Decode successful!');
+          debugPrint('🔐 Data keys: ${data.keys.toList()}');
+          debugPrint('🔐 Has accessToken: ${data.containsKey('accessToken')}');
+          debugPrint('🔐 Has user: ${data.containsKey('user')}');
+        } catch (e, stackTrace) {
+          debugPrint('🔐 JSON Parse Error: $e');
+          debugPrint('🔐 Stack trace: $stackTrace');
+          debugPrint('🔐 Full raw response body: ${response.body}');
+          debugPrint('🔐 Body char codes: ${response.body.codeUnits.take(100).toList()}');
+          return 'Server returned invalid JSON format';
         }
         
+        debugPrint('🔐 About to save tokens...');
         await _saveTokens(data['accessToken'], data['refreshToken']);
+        debugPrint('🔐 Tokens saved!');
+        
         _currentUser = data['user'];
+        debugPrint('🔐 Current user set!');
         
         // 🔑 TEMPORARY: Print token for hotel data insertion
         print('═══════════════════════════════════════════════════════════════');
@@ -358,7 +349,7 @@ class AuthService extends ChangeNotifier {
     required String phone,
     required String partnerName,
     required DateTime anniversaryDate,
-    File? avatarFile,
+    dynamic avatarFile,
   }) async {
     if (_accessToken == null || _currentUser == null) {
       debugPrint('🔐 Update Profile Error: No access token or user');
@@ -380,7 +371,7 @@ class AuthService extends ChangeNotifier {
         avatarUrl = await storageService.uploadFile(
           file: avatarFile,
           bucketName: 'avatars',
-          fileName: 'avatar_$userId.${avatarFile.path.split('.').last}',
+          fileName: 'avatar_$userId.${avatarFile.name.split('.').last}',
         );
         
         if (avatarUrl != null) {

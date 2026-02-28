@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +23,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   DateTime? _anniversaryDate;
   
   bool _isLoading = false;
-  File? _selectedImage;
+  XFile? _selectedImage;
   String? _currentAvatarUrl;
   
   final ImagePicker _picker = ImagePicker();
@@ -58,7 +59,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       setState(() {
-        _selectedImage = File(image.path);
+        _selectedImage = image;
       });
     }
   }
@@ -154,7 +155,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                       child: ClipOval(
                         child: _selectedImage != null
-                            ? Image.file(_selectedImage!, fit: BoxFit.cover)
+                            ? (kIsWeb 
+                                ? Image.network(_selectedImage!.path, fit: BoxFit.cover)
+                                : Image.file(File(_selectedImage!.path), fit: BoxFit.cover))
                             : _currentAvatarUrl != null && _currentAvatarUrl!.isNotEmpty
                                 ? CachedNetworkImage(
                                     imageUrl: _currentAvatarUrl!,
@@ -286,11 +289,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         const SizedBox(height: 8),
         GestureDetector(
           onTap: () async {
+            final now = DateTime.now();
+            final today = DateTime(now.year, now.month, now.day);
             final pickedDate = await showDatePicker(
               context: context,
-              initialDate: _anniversaryDate ?? DateTime.now(),
+              initialDate: _anniversaryDate ?? today,
               firstDate: DateTime(1900),
-              lastDate: DateTime.now(),
+              lastDate: today,
             );
             if (pickedDate != null) {
               setState(() {

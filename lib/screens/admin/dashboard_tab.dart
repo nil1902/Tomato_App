@@ -6,7 +6,9 @@ import '../../theme/app_colors.dart';
 
 /// Dashboard Tab - Main overview with stats and quick actions
 class DashboardTab extends StatefulWidget {
-  const DashboardTab({super.key});
+  final Function(int) onNavigate;
+  
+  const DashboardTab({super.key, required this.onNavigate});
 
   @override
   State<DashboardTab> createState() => _DashboardTabState();
@@ -39,32 +41,24 @@ class _DashboardTabState extends State<DashboardTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Admin Dashboard'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _loadStats,
-          ),
-        ],
-      ),
+      backgroundColor: Colors.transparent,
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : RefreshIndicator(
               onRefresh: _loadStats,
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(24),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Welcome Card
                     _buildWelcomeCard(),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 32),
                     
                     // Stats Grid
-                    _buildStatsGrid(),
-                    const SizedBox(height: 24),
+                    _buildStatsGrid(context),
+                    const SizedBox(height: 32),
                     
                     // Quick Actions
                     const Text(
@@ -120,40 +114,52 @@ class _DashboardTabState extends State<DashboardTab> {
     );
   }
 
-  Widget _buildStatsGrid() {
-    return GridView.count(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      crossAxisCount: 2,
-      crossAxisSpacing: 16,
-      mainAxisSpacing: 16,
-      childAspectRatio: 1.3,
-      children: [
-        _buildStatCard(
-          'Total Hotels',
-          '${_stats?['total_hotels'] ?? 0}',
-          Icons.hotel,
-          Colors.blue,
-        ),
-        _buildStatCard(
-          'Total Bookings',
-          '${_stats?['total_bookings'] ?? 0}',
-          Icons.book,
-          Colors.green,
-        ),
-        _buildStatCard(
-          'Total Users',
-          '${_stats?['total_users'] ?? 0}',
-          Icons.people,
-          Colors.orange,
-        ),
-        _buildStatCard(
-          'Today\'s Bookings',
-          '${_stats?['today_bookings'] ?? 0}',
-          Icons.today,
-          Colors.purple,
-        ),
-      ],
+  Widget _buildStatsGrid(BuildContext context) {
+    int crossAxisCount = 2;
+    double width = MediaQuery.of(context).size.width;
+    if (width > 1200) {
+      crossAxisCount = 4;
+    } else if (width > 800) {
+      crossAxisCount = 3;
+    }
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return GridView.count(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          crossAxisCount: crossAxisCount,
+          crossAxisSpacing: 24,
+          mainAxisSpacing: 24,
+          childAspectRatio: constraints.maxWidth / (crossAxisCount * 130),
+          children: [
+            _buildStatCard(
+              'Total Hotels',
+              '${_stats?['total_hotels'] ?? 0}',
+              Icons.hotel,
+              Colors.blue,
+            ),
+            _buildStatCard(
+              'Total Bookings',
+              '${_stats?['total_bookings'] ?? 0}',
+              Icons.book,
+              Colors.green,
+            ),
+            _buildStatCard(
+              'Total Users',
+              '${_stats?['total_users'] ?? 0}',
+              Icons.people,
+              Colors.orange,
+            ),
+            _buildStatCard(
+              'Today\'s Bookings',
+              '${_stats?['today_bookings'] ?? 0}',
+              Icons.today,
+              Colors.purple,
+            ),
+          ],
+        );
+      }
     );
   }
 
@@ -218,10 +224,7 @@ class _DashboardTabState extends State<DashboardTab> {
           Icons.add_business,
           Colors.blue,
           () {
-            // Navigate to add hotel screen
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Add Hotel feature coming soon!')),
-            );
+            widget.onNavigate(1); // Navigates to HotelsTab (index 1) index for add hotel flow
           },
         ),
         const SizedBox(height: 12),
@@ -231,10 +234,7 @@ class _DashboardTabState extends State<DashboardTab> {
           Icons.campaign,
           Colors.orange,
           () {
-            // Navigate to promotions tab
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Go to Promotions tab')),
-            );
+            widget.onNavigate(2); // Navigates to PromotionsTab (index 2)
           },
         ),
         const SizedBox(height: 12),
@@ -244,10 +244,7 @@ class _DashboardTabState extends State<DashboardTab> {
           Icons.attach_money,
           Colors.green,
           () {
-            // Navigate to hotels tab
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Go to Hotels tab')),
-            );
+            widget.onNavigate(1); // Navigates to HotelsTab (index 1)
           },
         ),
       ],

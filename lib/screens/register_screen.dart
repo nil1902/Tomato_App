@@ -340,8 +340,8 @@ class _RegisterScreenState extends State<RegisterScreen> with SingleTickerProvid
         // Google Sign-In Button
         OutlinedButton.icon(
           onPressed: isLoading ? null : _handleGoogleSignIn,
-          icon: Image.asset(
-            'assets/google_logo.png',
+          icon: Image.network(
+            'https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg.png',
             height: 24,
             width: 24,
             errorBuilder: (context, error, stackTrace) => const Icon(Icons.g_mobiledata, size: 32, color: Color(0xFF4285F4)),

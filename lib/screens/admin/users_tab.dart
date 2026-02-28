@@ -48,66 +48,98 @@ class _UsersTabState extends State<UsersTab> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Users Management'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _loadUsers,
-          ),
-        ],
-      ),
-      body: Column(
+    if (_loading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    final isDesktop = MediaQuery.of(context).size.width >= 800;
+
+    return Container(
+      color: Colors.transparent,
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           // Search Bar
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Search users...',
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+          Row(
+            children: [
+              Expanded(
+                flex: isDesktop ? 1 : 2,
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Search users...',
+                    prefixIcon: const Icon(Icons.search),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                  ),
+                  onChanged: (value) {
+                    setState(() => _searchQuery = value);
+                  },
                 ),
-                filled: true,
-                fillColor: Colors.grey[100],
               ),
-              onChanged: (value) {
-                setState(() => _searchQuery = value);
-              },
-            ),
+              if (isDesktop) const Spacer(flex: 2),
+              IconButton(
+                icon: const Icon(Icons.refresh),
+                onPressed: _loadUsers,
+              ),
+            ],
           ),
+          const SizedBox(height: 24),
           
-          // Users List
+          // Users List / Table Data
           Expanded(
-            child: _loading
-                ? const Center(child: CircularProgressIndicator())
-                : _filteredUsers.isEmpty
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.people_outline, size: 64, color: Colors.grey[400]),
-                            const SizedBox(height: 16),
-                            Text(
-                              _searchQuery.isEmpty ? 'No users found' : 'No matching users',
-                              style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+            child: _filteredUsers.isEmpty
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.people_outline, size: 64, color: Colors.grey[400]),
+                        const SizedBox(height: 16),
+                        Text(
+                          _searchQuery.isEmpty ? 'No users found' : 'No matching users',
+                          style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                        ),
+                      ],
+                    ),
+                  )
+                : Card(
+                    elevation: 1,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    child: isDesktop 
+                        ? ListView(
+                            children: [
+                              PaginatedDataTable(
+                                header: const Text('Users'),
+                                rowsPerPage: _filteredUsers.length > 10 ? 10 : (_filteredUsers.isEmpty ? 1 : _filteredUsers.length),
+                                source: _UserDataTableSource(
+                                  _filteredUsers,
+                                  _showUserOptions,
+                                ),
+                                columns: const [
+                                  DataColumn(label: Text('Name')),
+                                  DataColumn(label: Text('Email')),
+                                  DataColumn(label: Text('Role')),
+                                  DataColumn(label: Text('Joined')),
+                                  DataColumn(label: Text('Actions')),
+                                ],
+                              )
+                            ],
+                          )
+                        : RefreshIndicator(
+                            onRefresh: _loadUsers,
+                            child: ListView.builder(
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              itemCount: _filteredUsers.length,
+                              itemBuilder: (context, index) {
+                                final user = _filteredUsers[index];
+                                return _buildUserCard(user);
+                              },
                             ),
-                          ],
-                        ),
-                      )
-                    : RefreshIndicator(
-                        onRefresh: _loadUsers,
-                        child: ListView.builder(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          itemCount: _filteredUsers.length,
-                          itemBuilder: (context, index) {
-                            final user = _filteredUsers[index];
-                            return _buildUserCard(user);
-                          },
-                        ),
-                      ),
+                          ),
+                  ),
           ),
         ],
       ),
@@ -302,4 +334,78 @@ class _UsersTabState extends State<UsersTab> {
       ),
     );
   }
+}
+
+class _UserDataTableSource extends DataTableSource {
+  final List<dynamic> _users;
+  final Function(Map<String, dynamic>) _onRowTap;
+
+  _UserDataTableSource(this._users, this._onRowTap);
+
+  @override
+  DataRow? getRow(int index) {
+    if (index >= _users.length) return null;
+    final user = _users[index] as Map<String, dynamic>;
+    final isAdmin = user['role'] == 'admin';
+    final name = user['full_name'] ?? 'Unknown User';
+    final email = user['email'] ?? 'No email';
+    final role = user['role'] ?? 'user';
+    final joined = user['created_at']?.split('T')[0] ?? '';
+
+    return DataRow(
+      cells: [
+        DataCell(
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 16,
+                backgroundColor: isAdmin ? Colors.orange[100] : Colors.blue[100],
+                child: Icon(
+                  isAdmin ? Icons.admin_panel_settings : Icons.person,
+                  color: isAdmin ? Colors.orange[700] : Colors.blue[700],
+                  size: 16,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
+            ],
+          ),
+        ),
+        DataCell(Text(email)),
+        DataCell(
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: isAdmin ? Colors.orange[100] : Colors.blue[50],
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              role.toUpperCase(),
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: isAdmin ? Colors.orange[700] : Colors.blue[700],
+              ),
+            ),
+          ),
+        ),
+        DataCell(Text(joined)),
+        DataCell(
+          IconButton(
+            icon: const Icon(Icons.more_vert),
+            onPressed: () => _onRowTap(user),
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  bool get isRowCountApproximate => false;
+
+  @override
+  int get rowCount => _users.length;
+
+  @override
+  int get selectedRowCount => 0;
 }

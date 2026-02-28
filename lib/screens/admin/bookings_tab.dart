@@ -38,59 +38,118 @@ class _BookingsTabState extends State<BookingsTab> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Bookings Management'),
-        actions: [
-          PopupMenuButton<String>(
-            icon: const Icon(Icons.filter_list),
-            onSelected: (value) {
-              setState(() {
-                _filterStatus = value == 'all' ? null : value;
-              });
-              _loadBookings();
-            },
-            itemBuilder: (context) => [
-              const PopupMenuItem(value: 'all', child: Text('All Bookings')),
-              const PopupMenuItem(value: 'pending', child: Text('Pending')),
-              const PopupMenuItem(value: 'confirmed', child: Text('Confirmed')),
-              const PopupMenuItem(value: 'cancelled', child: Text('Cancelled')),
-              const PopupMenuItem(value: 'completed', child: Text('Completed')),
+    if (_loading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    final isDesktop = MediaQuery.of(context).size.width >= 800;
+
+    return Container(
+      color: Colors.transparent,
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Header Actions
+          Row(
+            children: [
+              const Text(
+                'Bookings',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              const Spacer(),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.grey[300]!),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    value: _filterStatus ?? 'all',
+                    icon: const Icon(Icons.filter_list),
+                    onChanged: (String? value) {
+                      setState(() {
+                        _filterStatus = value == 'all' ? null : value;
+                      });
+                      _loadBookings();
+                    },
+                    items: const [
+                      DropdownMenuItem(value: 'all', child: Text('All Bookings')),
+                      DropdownMenuItem(value: 'pending', child: Text('Pending')),
+                      DropdownMenuItem(value: 'confirmed', child: Text('Confirmed')),
+                      DropdownMenuItem(value: 'cancelled', child: Text('Cancelled')),
+                      DropdownMenuItem(value: 'completed', child: Text('Completed')),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              IconButton(
+                icon: const Icon(Icons.refresh),
+                onPressed: _loadBookings,
+              ),
             ],
           ),
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _loadBookings,
+          const SizedBox(height: 24),
+
+          // Bookings List
+          Expanded(
+            child: _bookings.isEmpty
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.book_outlined, size: 64, color: Colors.grey[400]),
+                        const SizedBox(height: 16),
+                        Text(
+                          'No bookings found',
+                          style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                        ),
+                      ],
+                    ),
+                  )
+                : Card(
+                    elevation: 1,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    child: isDesktop
+                        ? ListView(
+                            children: [
+                              PaginatedDataTable(
+                                header: const Text('All Bookings'),
+                                rowsPerPage: _bookings.length > 10 ? 10 : (_bookings.isEmpty ? 1 : _bookings.length),
+                                columnSpacing: 20,
+                                source: _BookingDataTableSource(
+                                  _bookings,
+                                  _showBookingOptions,
+                                ),
+                                columns: const [
+                                  DataColumn(label: Text('Booking ID')),
+                                  DataColumn(label: Text('Dates')),
+                                  DataColumn(label: Text('User')),
+                                  DataColumn(label: Text('Price')),
+                                  DataColumn(label: Text('Status')),
+                                  DataColumn(label: Text('Actions')),
+                                ],
+                              )
+                            ],
+                          )
+                        : RefreshIndicator(
+                            onRefresh: _loadBookings,
+                            child: ListView.builder(
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              itemCount: _bookings.length,
+                              itemBuilder: (context, index) {
+                                final booking = _bookings[index];
+                                return _buildBookingCard(booking);
+                              },
+                            ),
+                          ),
+                  ),
           ),
         ],
       ),
-      body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : _bookings.isEmpty
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.book_outlined, size: 64, color: Colors.grey[400]),
-                      const SizedBox(height: 16),
-                      Text(
-                        'No bookings found',
-                        style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-                      ),
-                    ],
-                  ),
-                )
-              : RefreshIndicator(
-                  onRefresh: _loadBookings,
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: _bookings.length,
-                    itemBuilder: (context, index) {
-                      final booking = _bookings[index];
-                      return _buildBookingCard(booking);
-                    },
-                  ),
-                ),
     );
   }
 
@@ -286,4 +345,80 @@ class _BookingsTabState extends State<BookingsTab> {
       ),
     );
   }
+}
+
+class _BookingDataTableSource extends DataTableSource {
+  final List<dynamic> _bookings;
+  final Function(Map<String, dynamic>) _onRowTap;
+
+  _BookingDataTableSource(this._bookings, this._onRowTap);
+
+  @override
+  DataRow? getRow(int index) {
+    if (index >= _bookings.length) return null;
+    final booking = _bookings[index] as Map<String, dynamic>;
+    
+    final id = booking['id']?.toString().substring(0, 8) ?? 'N/A';
+    final userId = booking['user_id']?.toString().substring(0, 8) ?? 'Unknown';
+    final status = booking['status'] ?? 'pending';
+    final checkIn = booking['check_in_date'] ?? '';
+    final checkOut = booking['check_out_date'] ?? '';
+    final totalPrice = booking['total_price'] ?? 0;
+
+    Color statusColor;
+    switch (status) {
+      case 'confirmed':
+        statusColor = Colors.green;
+        break;
+      case 'cancelled':
+        statusColor = Colors.red;
+        break;
+      case 'completed':
+        statusColor = Colors.blue;
+        break;
+      default:
+        statusColor = Colors.orange;
+    }
+
+    return DataRow(
+      cells: [
+        DataCell(Text('#$id', style: const TextStyle(fontWeight: FontWeight.bold))),
+        DataCell(Text('$checkIn → $checkOut')),
+        DataCell(Text(userId)),
+        DataCell(Text('₹$totalPrice', style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold))),
+        DataCell(
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: statusColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              status.toString().toUpperCase(),
+              style: TextStyle(
+                color: statusColor,
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+        DataCell(
+          IconButton(
+            icon: const Icon(Icons.more_vert),
+            onPressed: () => _onRowTap(booking),
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  bool get isRowCountApproximate => false;
+
+  @override
+  int get rowCount => _bookings.length;
+
+  @override
+  int get selectedRowCount => 0;
 }
