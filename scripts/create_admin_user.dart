@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:http/http.dart' as http;
 
 const String baseUrl = 'https://nukpc39r.ap-southeast.insforge.app';
@@ -163,7 +162,7 @@ Future<void> _createAdminProfile(String accessToken, String userId, String name,
 }
 
 void _printSuccess(String email, String password) {
-  print('\n' + '='*60);
+  print('\n${'='*60}');
   print('🎉 ADMIN ACCOUNT READY!');
   print('='*60);
   print('\n📧 Login Credentials:');

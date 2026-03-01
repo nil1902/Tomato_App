@@ -11,4 +11,8 @@ class ApiConstants {
     'Content-Type': 'application/json',
     'Authorization': 'Bearer $token',
   };
+
+  // ImgBB API Key for Free external image hosting
+  // GET A FREE KEY AT: https://api.imgbb.com/ (Takes 10 seconds)
+  static const String imgbbApiKey = 'INSERT_YOUR_IMGBB_KEY_HERE';
 }

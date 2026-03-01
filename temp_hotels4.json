@@ -1,0 +1,27 @@
+﻿{
+    "value":  [
+                  {
+                      "id":  "21c25d7b-77b6-4765-a8b5-7543de06e1df",
+                      "name":  "Grand Royal Hotel",
+                      "location":  "Manhattan, New York",
+                      "description":  "Experience the epitome of luxury at the Grand Royal Hotel, located in the heart of Manhattan.",
+                      "rating":  4.8,
+                      "amenities":  [
+                                        "Free Wifi",
+                                        "Swimming",
+                                        "Restaurant",
+                                        "Gym"
+                                    ],
+                      "image_urls":  [
+                                         "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-1.2.1\u0026auto=format\u0026fit=crop\u0026w=1000\u0026q=80"
+                                     ],
+                      "is_active":  true,
+                      "created_at":  "2026-02-24T19:04:53.287111+00:00",
+                      "couple_friendly":  true,
+                      "local_id_allowed":  true,
+                      "privacy_score":  9.5,
+                      "safety_verified":  true
+                  }
+              ],
+    "Count":  1
+}

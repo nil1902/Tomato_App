@@ -71,7 +71,7 @@ class _BookingsListScreenState extends State<BookingsListScreen> with SingleTick
       return Scaffold(
         appBar: AppBar(
           title: const Text('My Bookings', style: TextStyle(fontWeight: FontWeight.bold)),
-          backgroundColor: theme.colorScheme.background,
+          backgroundColor: theme.colorScheme.surface,
           elevation: 0,
           centerTitle: true,
         ),
@@ -82,7 +82,7 @@ class _BookingsListScreenState extends State<BookingsListScreen> with SingleTick
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Bookings', style: TextStyle(fontWeight: FontWeight.bold)),
-        backgroundColor: theme.colorScheme.background,
+        backgroundColor: theme.colorScheme.surface,
         elevation: 0,
         centerTitle: true,
         bottom: TabBar(

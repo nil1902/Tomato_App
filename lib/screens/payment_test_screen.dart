@@ -11,12 +11,12 @@ class PaymentTestScreen extends StatefulWidget {
   final String userPhone;
 
   const PaymentTestScreen({
-    Key? key,
+    super.key,
     required this.authToken,
     required this.userName,
     required this.userEmail,
     required this.userPhone,
-  }) : super(key: key);
+  });
 
   @override
   State<PaymentTestScreen> createState() => _PaymentTestScreenState();
@@ -284,7 +284,7 @@ class _PaymentTestScreenState extends State<PaymentTestScreen> {
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
-              value: _selectedOccasion,
+              initialValue: _selectedOccasion,
               decoration: const InputDecoration(
                 labelText: 'Occasion',
                 border: OutlineInputBorder(),
@@ -328,7 +328,7 @@ class _PaymentTestScreenState extends State<PaymentTestScreen> {
                 },
                 activeColor: const Color(0xFF8B1538),
               );
-            }).toList(),
+            }),
             const SizedBox(height: 12),
             TextFormField(
               controller: _addonsPriceController,

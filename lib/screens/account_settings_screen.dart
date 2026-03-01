@@ -390,7 +390,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
       trailing: Switch(
         value: value,
         onChanged: onChanged,
-        activeColor: AppColors.primary,
+        activeThumbColor: AppColors.primary,
       ),
     );
   }

@@ -4,7 +4,7 @@ import '../services/loyalty_service.dart';
 import '../services/auth_service.dart';
 
 class LoyaltyScreen extends StatefulWidget {
-  const LoyaltyScreen({Key? key}) : super(key: key);
+  const LoyaltyScreen({super.key});
 
   @override
   _LoyaltyScreenState createState() => _LoyaltyScreenState();
@@ -345,7 +345,7 @@ class _LoyaltyScreenState extends State<LoyaltyScreen> {
                 ),
               ),
             );
-          }).toList(),
+          }),
       ],
     );
   }

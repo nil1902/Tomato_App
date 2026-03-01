@@ -148,7 +148,7 @@ class _BookingScreenState extends State<BookingScreen> {
               child: SwitchListTile(
                 value: _bookAnonymously,
                 onChanged: (val) => setState(() => _bookAnonymously = val),
-                 activeColor: AppColors.primary,
+                 activeThumbColor: AppColors.primary,
                 title: Text('Book Anonymously', style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold)),
                 subtitle: const Text('Hide your name from the hotel staff for ultimate privacy'),
                 secondary: const Icon(Icons.security, color: AppColors.primary),

@@ -10,6 +10,7 @@ class Hotel {
   final double coupleRating;
   final Map<String, dynamic>? amenities;
   final List<String> images;
+  final double basePrice;
   final bool isActive;
   final DateTime createdAt;
 
@@ -25,6 +26,7 @@ class Hotel {
     required this.coupleRating,
     this.amenities,
     required this.images,
+    required this.basePrice,
     required this.isActive,
     required this.createdAt,
   });
@@ -42,6 +44,7 @@ class Hotel {
       coupleRating: (json['couple_rating'] ?? 0).toDouble(),
       amenities: json['amenities'],
       images: json['images'] != null ? List<String>.from(json['images']) : [],
+      basePrice: (json['base_price'] ?? json['price_per_night'] ?? json['starting_price'] ?? 200).toDouble(),
       isActive: json['is_active'] ?? true,
       createdAt: json['created_at'] != null 
           ? DateTime.parse(json['created_at']) 
@@ -62,6 +65,7 @@ class Hotel {
       'couple_rating': coupleRating,
       'amenities': amenities,
       'images': images,
+      'base_price': basePrice,
       'is_active': isActive,
       'created_at': createdAt.toIso8601String(),
     };

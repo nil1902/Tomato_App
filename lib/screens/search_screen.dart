@@ -18,7 +18,7 @@ class _SearchScreenState extends State<SearchScreen> {
   RangeValues _priceRange = const RangeValues(100, 500);
   int _guestCount = 2;
   DateTimeRange? _selectedDateRange;
-  Set<String> _selectedAmenities = {};
+  final Set<String> _selectedAmenities = {};
   
   bool _isSearching = false;
   
@@ -272,7 +272,7 @@ class _SearchScreenState extends State<SearchScreen> {
     final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: theme.colorScheme.background,
+      backgroundColor: theme.colorScheme.surface,
       body: SafeArea(
         child: Column(
           children: [

@@ -4,7 +4,7 @@ import '../models/coupon.dart';
 import '../services/coupon_service.dart';
 
 class CouponsScreen extends StatefulWidget {
-  const CouponsScreen({Key? key}) : super(key: key);
+  const CouponsScreen({super.key});
 
   @override
   _CouponsScreenState createState() => _CouponsScreenState();
@@ -61,7 +61,7 @@ class _CouponsScreenState extends State<CouponsScreen> {
                     children: [
                       _buildHeader(),
                       SizedBox(height: 16),
-                      ..._coupons.map((coupon) => _buildCouponCard(coupon)).toList(),
+                      ..._coupons.map((coupon) => _buildCouponCard(coupon)),
                     ],
                   ),
                 ),

@@ -176,7 +176,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         decoration: BoxDecoration(
                           color: AppColors.primary,
                           shape: BoxShape.circle,
-                          border: Border.all(color: theme.colorScheme.background, width: 3),
+                          border: Border.all(color: theme.colorScheme.surface, width: 3),
                         ),
                         child: const Icon(Icons.camera_alt, color: Colors.white, size: 20),
                       ),

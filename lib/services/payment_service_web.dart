@@ -4,8 +4,6 @@ import 'package:http/http.dart' as http;
 import '../models/payment_model.dart';
 import 'api_constants.dart';
 // ignore: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
-import 'dart:js' as js;
 
 class PaymentService {
   // TEST MODE KEYS - Razorpay Test API Keys

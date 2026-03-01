@@ -1,0 +1,186 @@
+
+          }
+        );
+        if 
+(strategyResponse.method 
+=== "presigned") {
+>         return await thi
+s.uploadWithPresignedUrl(s
+trategyResponse, file);
+        }
+        if 
+(strategyResponse.method 
+=== "direct") {
+          const formData 
+= new FormData();
+          
+formData.append("file", 
+file);
+          const response 
+= await this.http.request(
+            "PUT",
+            `/api/storage/
+buckets/${this.bucketName}
+/objects/${encodeURICompon
+ent(path)}`,
+            {
+              body: 
+formData,
+              headers: {
+                // Don't 
+set Content-Type, let 
+browser set multipart 
+boundary
+              }
+            }
+          );
+          return { data: 
+response, error: null };
+        }
+        throw new 
+InsForgeError(
+          `Unsupported 
+upload method: ${strategyR
+esponse.method}`,
+          500,
+          "STORAGE_ERROR"
+        );
+      } catch (error) {
+        return {
+          data: null,
+          error: error 
+instanceof InsForgeError 
+? error : new 
+InsForgeError(
+            "Upload 
+failed",
+            500,
+            
+"STORAGE_ERROR"
+          )
+        };
+          }
+        );
+        if 
+(strategyResponse.method 
+=== "presigned") {
+>         return await thi
+s.uploadWithPresignedUrl(s
+trategyResponse, file);
+        }
+        if 
+(strategyResponse.method 
+=== "direct") {
+          const formData 
+= new FormData();
+          
+formData.append("file", 
+file);
+          const response 
+= await this.http.request(
+            "POST",
+            `/api/storage/
+buckets/${this.bucketName}
+/objects`,
+            {
+              body: 
+formData,
+              headers: {
+                // Don't 
+set Content-Type, let 
+browser set multipart 
+boundary
+              }
+            }
+          );
+          return { data: 
+response, error: null };
+        }
+        throw new 
+InsForgeError(
+          `Unsupported 
+upload method: ${strategyR
+esponse.method}`,
+          500,
+          "STORAGE_ERROR"
+        );
+      } catch (error) {
+        return {
+          data: null,
+          error: error 
+instanceof InsForgeError 
+? error : new 
+InsForgeError(
+            "Upload 
+failed",
+            500,
+            
+"STORAGE_ERROR"
+          )
+        };
+    /**
+     * Internal method to 
+handle presigned URL 
+uploads
+     */
+>   async uploadWithPresig
+nedUrl(strategy, file) {
+      try {
+        const formData = 
+new FormData();
+        if 
+(strategy.fields) {
+          Object.entries(s
+trategy.fields).forEach(([
+key, value]) => {
+            
+formData.append(key, 
+value);
+          });
+        }
+        
+formData.append("file", 
+file);
+        const 
+uploadResponse = await 
+fetch(strategy.uploadUrl, 
+{
+          method: "POST",
+          body: formData
+        });
+        if 
+(!uploadResponse.ok) {
+          throw new 
+InsForgeError(
+            `Upload to 
+storage failed: ${uploadRe
+sponse.statusText}`,
+            
+uploadResponse.status,
+            
+"STORAGE_ERROR"
+          );
+        }
+        if 
+(strategy.confirmRequired 
+&& strategy.confirmUrl) {
+          const 
+confirmResponse = await 
+this.http.post(
+            
+strategy.confirmUrl,
+            {
+              size: 
+file.size,
+              
+contentType: file.type || 
+"application/octet-stream"
+            }
+          );
+          return { data: 
+confirmResponse, error: 
+null };
+        }
+        return {
+
+

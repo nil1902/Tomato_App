@@ -11,13 +11,13 @@ class PaymentScreen extends StatefulWidget {
   final String userPhone;
 
   const PaymentScreen({
-    Key? key,
+    super.key,
     required this.bookingRequest,
     required this.authToken,
     required this.userName,
     required this.userEmail,
     required this.userPhone,
-  }) : super(key: key);
+  });
 
   @override
   State<PaymentScreen> createState() => _PaymentScreenState();
@@ -517,11 +517,11 @@ class PaymentSuccessScreen extends StatelessWidget {
   final double amount;
 
   const PaymentSuccessScreen({
-    Key? key,
+    super.key,
     required this.bookingId,
     required this.paymentId,
     required this.amount,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

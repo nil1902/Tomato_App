@@ -14,7 +14,7 @@ class AppTheme {
         onSurface: AppColors.textPrimary,
         onPrimary: Colors.white,
       ),
-      textTheme: GoogleFonts.outfitTextTheme().copyWith(
+      textTheme: GoogleFonts.outfitTextTheme(ThemeData.light().textTheme).copyWith(
         displayLarge: GoogleFonts.outfit(
             fontSize: 32, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
         displayMedium: GoogleFonts.outfit(
@@ -53,7 +53,7 @@ class AppTheme {
         onSurface: Colors.white,
         onPrimary: Colors.white,
       ),
-      textTheme: GoogleFonts.outfitTextTheme().copyWith(
+      textTheme: GoogleFonts.outfitTextTheme(ThemeData.dark().textTheme).copyWith(
         displayLarge: GoogleFonts.outfit(
             fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white),
         displayMedium: GoogleFonts.outfit(
@@ -61,7 +61,7 @@ class AppTheme {
         bodyLarge: GoogleFonts.outfit(
             fontSize: 16, color: Colors.white),
         bodyMedium: GoogleFonts.outfit(
-            fontSize: 14, color: Colors.grey[400]),
+            fontSize: 14, color: Colors.white70),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(

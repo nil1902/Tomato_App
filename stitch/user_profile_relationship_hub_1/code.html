@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LoveNest - User Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ff385d",
+                        "background-light": "#f8f5f6",
+                        "background-dark": "#230f13",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex flex-col overflow-x-hidden">
+<!-- Header Section with Soft Gradient -->
+<div class="relative w-full bg-gradient-to-b from-primary/20 via-background-dark to-background-dark pb-6 pt-12 px-4 rounded-b-xl">
+<!-- Top Bar -->
+<div class="flex items-center justify-between mb-8">
+<h1 class="text-2xl font-bold">Profile</h1>
+<button class="flex items-center justify-center w-10 h-10 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+<!-- User Info -->
+<div class="flex flex-col items-center gap-4">
+<div class="relative">
+<div class="w-24 h-24 rounded-full border-4 border-background-dark overflow-hidden bg-cover bg-center shadow-lg" data-alt="Portrait of a smiling young man" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDR4U4RvgJ7uZTqKQtZuTkfKelGm5uxQ5TEw0njLkMOKpyfkKXDks48DH0Qw-EDJ7zskmos5rBqd4OGdwKpL0T3oUtFrFMpB0N_Zr9tl8kSapm7X2sfF8Kba2E2gDB3oyqSlgrtIvRRjstf4UqqqOLvnrbvhPYDgbh5ReKydqzm1fcq9UYYfMQu8JlNyuAZLnJdQLJSvTNR6gAmd7h_DHgLhe4l4plJjZW04NlYwHhSEMW5ycWOI4Gw1ze1jlbtVyoiQyWcAgheCZc');">
+</div>
+<div class="absolute bottom-0 right-0 bg-primary text-white text-[10px] font-bold px-2 py-0.5 rounded-full border-2 border-background-dark flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[12px]">verified</span>
+                    PLATINUM
+                </div>
+</div>
+<div class="text-center">
+<h2 class="text-xl font-bold text-slate-900 dark:text-white">Alex Rivera</h2>
+<div class="flex items-center justify-center gap-2 mt-1 text-slate-500 dark:text-slate-400 text-sm">
+<span class="material-symbols-outlined text-primary text-sm fill-1">favorite</span>
+<span>Together since 2022</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Scrollable Content -->
+<div class="flex-1 px-4 py-2 space-y-4 pb-24">
+<!-- Loyalty & Rewards Card -->
+<div class="bg-white dark:bg-[#36171d] p-5 rounded-xl shadow-sm border border-slate-100 dark:border-none relative overflow-hidden">
+<!-- Decorative background element -->
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl pointer-events-none"></div>
+<div class="flex items-center justify-between mb-3 relative z-10">
+<div>
+<p class="text-xs font-semibold text-primary uppercase tracking-wide mb-1">Loyalty Rewards</p>
+<p class="text-2xl font-bold text-slate-900 dark:text-white">2,450 <span class="text-sm font-normal text-slate-500 dark:text-slate-300">pts</span></p>
+</div>
+<div class="w-10 h-10 rounded-full bg-gradient-to-br from-amber-300 to-amber-500 flex items-center justify-center shadow-lg shadow-amber-500/20">
+<span class="material-symbols-outlined text-white">workspace_premium</span>
+</div>
+</div>
+<div class="relative z-10">
+<div class="flex justify-between text-xs mb-2 text-slate-600 dark:text-slate-300 font-medium">
+<span>Gold Tier</span>
+<span>Next: Diamond (850 pts left)</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-[#240f13] rounded-full h-2">
+<div class="bg-primary h-2 rounded-full" style="width: 75%"></div>
+</div>
+</div>
+</div>
+<!-- Relationship Snapshot -->
+<div class="bg-white dark:bg-[#36171d] p-4 rounded-xl shadow-sm flex items-center gap-4 border border-slate-100 dark:border-none">
+<div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary">diversity_1</span>
+</div>
+<div class="flex-1">
+<p class="text-sm text-slate-500 dark:text-slate-400">Partner</p>
+<p class="font-bold text-slate-900 dark:text-white">Sam</p>
+</div>
+<div class="h-8 w-[1px] bg-slate-200 dark:bg-white/10"></div>
+<div class="flex-1">
+<p class="text-sm text-slate-500 dark:text-slate-400">Anniversary</p>
+<p class="font-bold text-slate-900 dark:text-white">June 14 <span class="text-xs font-normal text-primary">(in 45 days)</span></p>
+</div>
+</div>
+<!-- Menu List -->
+<div class="bg-white dark:bg-[#36171d] rounded-xl shadow-sm overflow-hidden border border-slate-100 dark:border-none">
+<a class="flex items-center justify-between p-4 border-b border-slate-100 dark:border-white/5 active:bg-slate-50 dark:active:bg-white/5 transition-colors group" href="#">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-500/10 text-blue-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</div>
+<span class="font-medium text-slate-900 dark:text-white">Edit Profile</span>
+</div>
+<span class="material-symbols-outlined text-slate-400 text-lg">chevron_right</span>
+</a>
+<a class="flex items-center justify-between p-4 border-b border-slate-100 dark:border-white/5 active:bg-slate-50 dark:active:bg-white/5 transition-colors group" href="#">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-purple-50 dark:bg-purple-500/10 text-purple-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[20px]">calendar_month</span>
+</div>
+<span class="font-medium text-slate-900 dark:text-white">My Bookings</span>
+</div>
+<span class="material-symbols-outlined text-slate-400 text-lg">chevron_right</span>
+</a>
+<a class="flex items-center justify-between p-4 border-b border-slate-100 dark:border-white/5 active:bg-slate-50 dark:active:bg-white/5 transition-colors group" href="#">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-pink-50 dark:bg-pink-500/10 text-pink-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</div>
+<span class="font-medium text-slate-900 dark:text-white">Wishlist</span>
+</div>
+<span class="material-symbols-outlined text-slate-400 text-lg">chevron_right</span>
+</a>
+<a class="flex items-center justify-between p-4 border-b border-slate-100 dark:border-white/5 active:bg-slate-50 dark:active:bg-white/5 transition-colors group" href="#">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 text-emerald-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[20px]">confirmation_number</span>
+</div>
+<span class="font-medium text-slate-900 dark:text-white">Coupons &amp; Wallet</span>
+</div>
+<span class="material-symbols-outlined text-slate-400 text-lg">chevron_right</span>
+</a>
+<a class="flex items-center justify-between p-4 active:bg-slate-50 dark:active:bg-white/5 transition-colors group" href="#">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-orange-50 dark:bg-orange-500/10 text-orange-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[20px]">shield</span>
+</div>
+<span class="font-medium text-slate-900 dark:text-white">Safety Center</span>
+</div>
+<span class="material-symbols-outlined text-slate-400 text-lg">chevron_right</span>
+</a>
+</div>
+<!-- Log Out Button (Optional utility) -->
+<button class="w-full p-4 rounded-xl text-slate-500 dark:text-slate-400 font-medium hover:text-primary dark:hover:text-primary transition-colors text-sm">
+            Log Out
+        </button>
+</div>
+<!-- Bottom Navigation Bar -->
+<div class="fixed bottom-0 left-0 right-0 bg-white dark:bg-[#36171d] border-t border-slate-200 dark:border-[#4b2028] px-6 pb-6 pt-3 z-50">
+<div class="flex justify-between items-center max-w-lg mx-auto">
+<a class="flex flex-col items-center justify-center gap-1 group w-16" href="#">
+<div class="text-slate-400 dark:text-[#ce8d99] group-hover:text-primary dark:group-hover:text-primary transition-colors flex h-6 w-6 items-center justify-center">
+<span class="material-symbols-outlined">search</span>
+</div>
+<p class="text-slate-400 dark:text-[#ce8d99] group-hover:text-primary dark:group-hover:text-primary transition-colors text-[10px] font-medium leading-normal tracking-[0.015em]">Explore</p>
+</a>
+<a class="flex flex-col items-center justify-center gap-1 group w-16" href="#">
+<div class="text-slate-400 dark:text-[#ce8d99] group-hover:text-primary dark:group-hover:text-primary transition-colors flex h-6 w-6 items-center justify-center">
+<span class="material-symbols-outlined">calendar_today</span>
+</div>
+<p class="text-slate-400 dark:text-[#ce8d99] group-hover:text-primary dark:group-hover:text-primary transition-colors text-[10px] font-medium leading-normal tracking-[0.015em]">Bookings</p>
+</a>
+<!-- Center Action Button -->
+<a class="flex flex-col items-center justify-center -mt-8" href="#">
+<div class="bg-primary text-white h-14 w-14 rounded-full flex items-center justify-center shadow-lg shadow-primary/40 ring-4 ring-background-light dark:ring-background-dark">
+<span class="material-symbols-outlined text-2xl fill-1">favorite</span>
+</div>
+</a>
+<a class="flex flex-col items-center justify-center gap-1 group w-16" href="#">
+<div class="text-slate-400 dark:text-[#ce8d99] group-hover:text-primary dark:group-hover:text-primary transition-colors flex h-6 w-6 items-center justify-center">
+<span class="material-symbols-outlined">chat_bubble</span>
+</div>
+<p class="text-slate-400 dark:text-[#ce8d99] group-hover:text-primary dark:group-hover:text-primary transition-colors text-[10px] font-medium leading-normal tracking-[0.015em]">Inbox</p>
+</a>
+<a class="flex flex-col items-center justify-center gap-1 group w-16" href="#">
+<div class="text-primary flex h-6 w-6 items-center justify-center">
+<span class="material-symbols-outlined fill-1">person</span>
+</div>
+<p class="text-primary text-[10px] font-medium leading-normal tracking-[0.015em]">Profile</p>
+</a>
+</div>
+</div>
+</body></html>

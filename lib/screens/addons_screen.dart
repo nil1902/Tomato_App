@@ -5,7 +5,7 @@ import '../services/addon_service.dart';
 class AddonsScreen extends StatefulWidget {
   final List<Addon>? preSelectedAddons;
   
-  const AddonsScreen({Key? key, this.preSelectedAddons}) : super(key: key);
+  const AddonsScreen({super.key, this.preSelectedAddons});
 
   @override
   _AddonsScreenState createState() => _AddonsScreenState();
@@ -15,7 +15,7 @@ class _AddonsScreenState extends State<AddonsScreen> {
   final AddonService _addonService = AddonService();
   Map<String, List<Addon>> _categorizedAddons = {};
   bool _isLoading = true;
-  List<Addon> _selectedAddons = [];
+  final List<Addon> _selectedAddons = [];
 
   @override
   void initState() {
@@ -153,7 +153,7 @@ class _AddonsScreenState extends State<AddonsScreen> {
           ),
         ),
         SizedBox(height: 12),
-        ...addons.map((addon) => _buildAddonCard(addon)).toList(),
+        ...addons.map((addon) => _buildAddonCard(addon)),
       ],
     );
   }

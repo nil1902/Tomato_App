@@ -1,0 +1,17 @@
+==FETCH INTERCEPT==
+URL: https://nukpc39r.ap-southeast.insforge.app/api/storage/buckets/admin_bucket/upload-strategy
+method POST
+headers {
+  Authorization: 'Bearer test',
+  'Content-Type': 'application/json;charset=UTF-8'
+}
+Done {
+  data: null,
+  error: _InsForgeError: Upload failed
+      at StorageBucket.upload (C:\Users\HP\Desktop\zomato_app\temp_ins\node_modules\@insforge\sdk\dist\index.js:998:57)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+    statusCode: 500,
+    error: 'STORAGE_ERROR',
+    nextActions: undefined
+  }
+}

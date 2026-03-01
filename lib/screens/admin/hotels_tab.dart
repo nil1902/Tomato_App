@@ -118,14 +118,22 @@ class _HotelsTabState extends State<HotelsTab> {
                           const SizedBox(height: 16),
                           Text(
                             _searchQuery.isEmpty ? 'No hotels found' : 'No matching hotels',
-                            style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              color: Theme.of(context).textTheme.bodySmall?.color ?? Colors.grey[600]
+                            ),
                           ),
                         ],
                       ),
                     )
                   : Card(
-                      elevation: 1,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      elevation: Theme.of(context).brightness == Brightness.dark ? 0 : 2,
+                      color: Theme.of(context).colorScheme.surface,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        side: Theme.of(context).brightness == Brightness.dark 
+                           ? BorderSide(color: Colors.white.withOpacity(0.05)) 
+                           : BorderSide.none,
+                      ),
                       child: isDesktop 
                           ? ListView(
                               children: [
@@ -170,14 +178,22 @@ class _HotelsTabState extends State<HotelsTab> {
   Widget _buildHotelCard(Map<String, dynamic> hotel) {
     final name = hotel['name'] ?? 'Unknown Hotel';
     final location = hotel['location'] ?? 'Unknown Location';
-    final price = hotel['price_per_night'] ?? 0;
+    final price = hotel['base_price'] ?? hotel['price_per_night'] ?? 0;
     final rating = hotel['rating']?.toDouble() ?? 0.0;
-    final images = hotel['image_urls'] as List<dynamic>?;
-    final imageUrl = images != null && images.isNotEmpty ? images[0] : null;
+    final images = hotel['image_urls'] as List<dynamic>? ?? hotel['images'] as List<dynamic>?;
+    final imageUrl = images != null && images.isNotEmpty ? images[0].toString() : null;
+
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      color: theme.colorScheme.surface,
+      elevation: isDark ? 0 : 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: isDark ? BorderSide(color: Colors.white.withOpacity(0.05)) : BorderSide.none,
+      ),
       child: InkWell(
         onTap: () => _showHotelOptions(hotel),
         borderRadius: BorderRadius.circular(12),
@@ -194,7 +210,7 @@ class _HotelsTabState extends State<HotelsTab> {
                         width: 80,
                         height: 80,
                         fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => Container(
+                        errorBuilder: (_, _, _) => Container(
                           width: 80,
                           height: 80,
                           color: Colors.grey[300],
@@ -217,8 +233,7 @@ class _HotelsTabState extends State<HotelsTab> {
                   children: [
                     Text(
                       name,
-                      style: const TextStyle(
-                        fontSize: 16,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                       maxLines: 1,
@@ -227,12 +242,12 @@ class _HotelsTabState extends State<HotelsTab> {
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        Icon(Icons.location_on, size: 14, color: Colors.grey[600]),
+                        Icon(Icons.location_on, size: 14, color: Theme.of(context).textTheme.bodySmall?.color ?? Colors.grey),
                         const SizedBox(width: 4),
                         Expanded(
                           child: Text(
                             location,
-                            style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                            style: Theme.of(context).textTheme.bodySmall,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -246,15 +261,14 @@ class _HotelsTabState extends State<HotelsTab> {
                         const SizedBox(width: 4),
                         Text(
                           rating.toStringAsFixed(1),
-                          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(width: 16),
                         Text(
                           '₹$price/night',
-                          style: const TextStyle(
-                            fontSize: 14,
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.bold,
-                            color: Colors.green,
+                            color: Theme.of(context).brightness == Brightness.dark ? Colors.green[400] : Colors.green[700],
                           ),
                         ),
                       ],
@@ -322,8 +336,9 @@ class _HotelsTabState extends State<HotelsTab> {
   }
 
   void _showPriceDialog(Map<String, dynamic> hotel) {
+    final defaultPrice = hotel['base_price'] ?? hotel['price_per_night'];
     final controller = TextEditingController(
-      text: hotel['price_per_night']?.toString() ?? '',
+      text: defaultPrice?.toString() ?? '',
     );
     
     showDialog(
@@ -354,18 +369,20 @@ class _HotelsTabState extends State<HotelsTab> {
               final adminService = AdminService(authService.accessToken!);
               final success = await adminService.updateHotel(
                 hotel['id'],
-                {'price_per_night': price},
+                {'base_price': price},
               );
               
-              if (success) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Price updated successfully!')),
-                );
-                _loadHotels();
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Failed to update price')),
-                );
+              if (mounted) {
+                if (success) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Price updated successfully!')),
+                  );
+                  _loadHotels();
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Failed to update price')),
+                  );
+                }
               }
             },
             child: const Text('Update'),
@@ -394,15 +411,17 @@ class _HotelsTabState extends State<HotelsTab> {
               final adminService = AdminService(authService.accessToken!);
               final success = await adminService.deleteHotel(hotel['id']);
               
-              if (success) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Hotel deleted successfully!')),
-                );
-                _loadHotels();
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Failed to delete hotel')),
-                );
+              if (mounted) {
+                if (success) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Hotel deleted successfully!')),
+                  );
+                  _loadHotels();
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Failed to delete hotel')),
+                  );
+                }
               }
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
@@ -427,10 +446,10 @@ class _HotelDataTableSource extends DataTableSource {
     
     final name = hotel['name'] ?? 'Unknown Hotel';
     final location = hotel['location'] ?? 'Unknown Location';
-    final price = hotel['price_per_night'] ?? 0;
+    final price = hotel['base_price'] ?? hotel['price_per_night'] ?? 0;
     final rating = hotel['rating']?.toDouble() ?? 0.0;
-    final images = hotel['image_urls'] as List<dynamic>?;
-    final imageUrl = images != null && images.isNotEmpty ? images[0] : null;
+    final images = hotel['image_urls'] as List<dynamic>? ?? hotel['images'] as List<dynamic>?;
+    final imageUrl = images != null && images.isNotEmpty ? images[0].toString() : null;
 
     return DataRow(
       cells: [
@@ -443,7 +462,7 @@ class _HotelDataTableSource extends DataTableSource {
                     width: 40,
                     height: 40,
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Container(
+                    errorBuilder: (_, _, _) => Container(
                       width: 40,
                       height: 40,
                       color: Colors.grey[300],

@@ -3,7 +3,7 @@
 ## Admin Credentials
 
 **Primary Admin:**
-<!-- Email: nilimeshpal15+admin@gmail.com
+<!-- Email: nilimeshpal15+admin@gmail.comAdmin@12345
 Password: Admin@12345 -->
 
 

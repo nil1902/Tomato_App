@@ -1,0 +1,108 @@
+
+     * @param file - File 
+or Blob to upload
+     */
+    async upload(path, 
+file) {
+      try {
+        const 
+strategyResponse = await 
+this.http.post(
+>         `/api/storage/bu
+ckets/${this.bucketName}/u
+pload-strategy`,
+          {
+            filename: 
+path,
+            contentType: 
+file.type || "application/
+octet-stream",
+            size: 
+file.size
+          }
+        );
+        if 
+(strategyResponse.method 
+=== "presigned") {
+          return await thi
+s.uploadWithPresignedUrl(s
+trategyResponse, file);
+        }
+        if 
+(strategyResponse.method 
+=== "direct") {
+          const formData 
+= new FormData();
+          
+formData.append("file", 
+file);
+          const response 
+= await this.http.request(
+            "PUT",
+            `/api/storage/
+buckets/${this.bucketName}
+/objects/${encodeURICompon
+ent(path)}`,
+            {
+              body: 
+formData,
+              headers: {
+                // Don't 
+set Content-Type, let 
+browser set multipart 
+boundary
+              }
+     */
+    async 
+uploadAuto(file) {
+      try {
+        const filename = 
+file instanceof File ? 
+file.name : "file";
+        const 
+strategyResponse = await 
+this.http.post(
+>         `/api/storage/bu
+ckets/${this.bucketName}/u
+pload-strategy`,
+          {
+            filename,
+            contentType: 
+file.type || "application/
+octet-stream",
+            size: 
+file.size
+          }
+        );
+        if 
+(strategyResponse.method 
+=== "presigned") {
+          return await thi
+s.uploadWithPresignedUrl(s
+trategyResponse, file);
+        }
+        if 
+(strategyResponse.method 
+=== "direct") {
+          const formData 
+= new FormData();
+          
+formData.append("file", 
+file);
+          const response 
+= await this.http.request(
+            "POST",
+            `/api/storage/
+buckets/${this.bucketName}
+/objects`,
+            {
+              body: 
+formData,
+              headers: {
+                // Don't 
+set Content-Type, let 
+browser set multipart 
+boundary
+              }
+
+

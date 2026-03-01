@@ -129,7 +129,7 @@ void main() async {
 }
 
 void _printSuccess(String email) {
-  print('\n' + '='*70);
+  print('\n${'='*70}');
   print('🎉 ADMIN ACCESS GRANTED!');
   print('='*70);
   print('\n✅ Your account now has full admin privileges');
@@ -149,7 +149,7 @@ void _printSuccess(String email) {
 }
 
 void _printManualSQLInstructions(String email) {
-  print('\n' + '='*70);
+  print('\n${'='*70}');
   print('⚠️  MANUAL DATABASE UPDATE REQUIRED');
   print('='*70);
   print('\nThe "role" column needs to be added to your database.');

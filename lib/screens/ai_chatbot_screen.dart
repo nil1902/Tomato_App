@@ -201,7 +201,7 @@ class _AIChatbotScreenState extends State<AIChatbotScreen> {
                         ),
                       ),
                     );
-                  }).toList(),
+                  }),
                 ],
               ),
             ),

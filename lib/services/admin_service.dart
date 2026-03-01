@@ -1,11 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'api_constants.dart';
 
 class AdminService {
-  String? _accessToken;
+  final String? _accessToken;
 
   AdminService([this._accessToken]);
 
@@ -39,7 +38,11 @@ class AdminService {
         headers: {..._headers, 'Prefer': 'return=representation'},
         body: jsonEncode([hotelData]),
       );
-      return response.statusCode == 200 || response.statusCode == 201;
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        debugPrint('Admin Create Hotel Failed: ${response.statusCode} - ${response.body}');
+        return false;
+      }
+      return true;
     } catch (e) {
       debugPrint('Admin Create Hotel Error: $e');
       return false;
@@ -53,7 +56,11 @@ class AdminService {
         headers: {..._headers, 'Prefer': 'return=representation'},
         body: jsonEncode(updates),
       );
-      return response.statusCode == 200 || response.statusCode == 204;
+      if (response.statusCode != 200 && response.statusCode != 204) {
+        debugPrint('Admin Update Hotel Failed: ${response.statusCode} - ${response.body}');
+        return false;
+      }
+      return true;
     } catch (e) {
       debugPrint('Admin Update Hotel Error: $e');
       return false;
@@ -271,7 +278,8 @@ class AdminService {
         body: jsonEncode([bannerData]),
       );
       if (response.statusCode != 200 && response.statusCode != 201) {
-        throw Exception('Failed to add banner');
+        debugPrint('Admin Add Banner Failed. Status: \${response.statusCode}, Body: \${response.body}');
+        throw Exception('Failed to add banner: \${response.body}');
       }
     } catch (e) {
       debugPrint('Admin Add Banner Error: $e');

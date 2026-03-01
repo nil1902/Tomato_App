@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:lovenest/theme/app_colors.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:lovenest/services/auth_service.dart';
 import 'package:lovenest/services/database_service.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class HotelDetailsScreen extends StatefulWidget {
   final String hotelId;
@@ -215,7 +217,7 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> with SingleTick
             child: Container(
               padding: const EdgeInsets.all(24.0),
               decoration: BoxDecoration(
-                color: theme.colorScheme.background,
+                color: theme.colorScheme.surface,
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
               ),
               child: Column(
@@ -816,6 +818,11 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> with SingleTick
 
   // Location Tab
   Widget _buildLocationTab(ThemeData theme) {
+    final lat = (_hotelData!['lat'] as num?)?.toDouble() ?? 40.7128;
+    final lng = (_hotelData!['lng'] as num?)?.toDouble() ?? -74.0060;
+    final LatLng hotelLocation = LatLng(lat, lng);
+    final isDesktop = !kIsWeb && (defaultTargetPlatform == TargetPlatform.windows || defaultTargetPlatform == TargetPlatform.linux || defaultTargetPlatform == TargetPlatform.macOS);
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -827,18 +834,36 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> with SingleTick
               color: Colors.grey[300],
               borderRadius: BorderRadius.circular(16),
             ),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.map, size: 64, color: AppColors.textSecondary.withOpacity(0.5)),
-                  const SizedBox(height: 16),
-                  Text('Map View', style: theme.textTheme.titleLarge),
-                  const SizedBox(height: 8),
-                  Text('Interactive map coming soon', style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary)),
-                ],
-              ),
-            ),
+            clipBehavior: Clip.antiAlias,
+            child: isDesktop
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.map, size: 64, color: AppColors.textSecondary.withOpacity(0.5)),
+                        const SizedBox(height: 16),
+                        Text('Map View (Desktop)', style: theme.textTheme.titleLarge),
+                        const SizedBox(height: 8),
+                        Text('Use Android/iOS device to view the actual Google Map', style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary)),
+                      ],
+                    ),
+                  )
+                : GoogleMap(
+                    initialCameraPosition: CameraPosition(target: hotelLocation, zoom: 15),
+                    markers: {
+                      Marker(
+                        markerId: MarkerId('hotel_${widget.hotelId}'),
+                        position: hotelLocation,
+                        infoWindow: InfoWindow(
+                          title: _hotelData!['name'] ?? 'Hotel',
+                          snippet: _hotelData!['address'] ?? 'Hotel Address',
+                        ),
+                      ),
+                    },
+                    myLocationEnabled: false,
+                    zoomControlsEnabled: true,
+                    mapType: MapType.normal,
+                  ),
           ),
           
           const SizedBox(height: 24),
@@ -974,7 +999,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
-      color: Theme.of(context).colorScheme.background,
+      color: Theme.of(context).colorScheme.surface,
       child: _tabBar,
     );
   }

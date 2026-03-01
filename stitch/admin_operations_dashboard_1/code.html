@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LoveNest Admin Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#258cf4",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101922",
+                        "surface-dark": "#182634",
+                        "surface-light": "#ffffff",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex flex-col font-display overflow-x-hidden">
+<!-- Header -->
+<header class="flex items-center justify-between px-4 py-3 bg-surface-light dark:bg-surface-dark border-b border-slate-200 dark:border-slate-800 sticky top-0 z-20">
+<div class="flex items-center gap-3">
+<div class="bg-primary/20 p-2 rounded-lg text-primary">
+<span class="material-symbols-outlined">admin_panel_settings</span>
+</div>
+<div>
+<h1 class="text-lg font-bold leading-tight">Admin Console</h1>
+<p class="text-xs text-slate-500 dark:text-slate-400">LoveNest Operations</p>
+</div>
+</div>
+<button class="relative p-2 text-slate-500 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-surface-light dark:border-surface-dark"></span>
+</button>
+</header>
+<!-- Main Content -->
+<main class="flex-1 p-4 pb-24 space-y-6">
+<!-- Period Selector -->
+<div class="flex items-center justify-between">
+<h2 class="text-lg font-bold">Performance Overview</h2>
+<select class="bg-surface-light dark:bg-surface-dark border border-slate-200 dark:border-slate-700 text-xs rounded-lg px-2 py-1 focus:ring-primary focus:border-primary">
+<option>Last 7 Days</option>
+<option>Last 30 Days</option>
+<option>This Month</option>
+</select>
+</div>
+<!-- Metric Grid -->
+<div class="grid grid-cols-2 gap-3">
+<!-- Total Revenue -->
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-4xl text-primary">attach_money</span>
+</div>
+<p class="text-xs font-medium text-slate-500 dark:text-slate-400">Total Revenue</p>
+<div class="flex items-baseline gap-2 mt-1">
+<h3 class="text-xl font-bold text-slate-900 dark:text-white">$42.5k</h3>
+<span class="text-[10px] font-bold text-green-500 bg-green-500/10 px-1.5 py-0.5 rounded-full flex items-center">
+<span class="material-symbols-outlined text-[10px] mr-0.5">arrow_upward</span> 12%
+                    </span>
+</div>
+<!-- Sparkline placeholder -->
+<div class="h-8 mt-3 w-full">
+<svg class="w-full h-full stroke-primary fill-none stroke-2" preserveaspectratio="none" viewbox="0 0 100 30">
+<path d="M0 25 C 20 25, 20 10, 40 15 C 60 20, 60 5, 80 10 C 90 12, 100 2, 100 2" vector-effect="non-scaling-stroke"></path>
+<defs>
+<lineargradient id="grad1" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" style="stop-color:rgb(37, 140, 244);stop-opacity:0.2"></stop>
+<stop offset="100%" style="stop-color:rgb(37, 140, 244);stop-opacity:0"></stop>
+</lineargradient>
+</defs>
+<path class="stroke-none fill-primary/10" d="M0 25 C 20 25, 20 10, 40 15 C 60 20, 60 5, 80 10 C 90 12, 100 2, 100 2 V 30 H 0 Z"></path>
+</svg>
+</div>
+</div>
+<!-- Active Bookings -->
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-4xl text-purple-500">book_online</span>
+</div>
+<p class="text-xs font-medium text-slate-500 dark:text-slate-400">Active Bookings</p>
+<div class="flex items-baseline gap-2 mt-1">
+<h3 class="text-xl font-bold text-slate-900 dark:text-white">156</h3>
+<span class="text-[10px] font-bold text-green-500 bg-green-500/10 px-1.5 py-0.5 rounded-full flex items-center">
+<span class="material-symbols-outlined text-[10px] mr-0.5">arrow_upward</span> 5%
+                    </span>
+</div>
+<!-- Sparkline placeholder -->
+<div class="h-8 mt-3 w-full">
+<svg class="w-full h-full stroke-purple-500 fill-none stroke-2" preserveaspectratio="none" viewbox="0 0 100 30">
+<path d="M0 20 C 15 25, 30 15, 45 18 C 60 22, 75 10, 100 5" vector-effect="non-scaling-stroke"></path>
+<path class="stroke-none fill-purple-500/10" d="M0 20 C 15 25, 30 15, 45 18 C 60 22, 75 10, 100 5 V 30 H 0 Z"></path>
+</svg>
+</div>
+</div>
+<!-- New Users -->
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-4xl text-blue-400">group_add</span>
+</div>
+<p class="text-xs font-medium text-slate-500 dark:text-slate-400">New Users</p>
+<div class="flex items-baseline gap-2 mt-1">
+<h3 class="text-xl font-bold text-slate-900 dark:text-white">340</h3>
+<span class="text-[10px] font-bold text-green-500 bg-green-500/10 px-1.5 py-0.5 rounded-full flex items-center">
+<span class="material-symbols-outlined text-[10px] mr-0.5">arrow_upward</span> 8%
+                    </span>
+</div>
+<!-- Sparkline placeholder -->
+<div class="h-8 mt-3 w-full">
+<svg class="w-full h-full stroke-blue-400 fill-none stroke-2" preserveaspectratio="none" viewbox="0 0 100 30">
+<path d="M0 28 C 10 25, 20 20, 30 22 C 50 26, 70 15, 100 10" vector-effect="non-scaling-stroke"></path>
+<path class="stroke-none fill-blue-400/10" d="M0 28 C 10 25, 20 20, 30 22 C 50 26, 70 15, 100 10 V 30 H 0 Z"></path>
+</svg>
+</div>
+</div>
+<!-- Conversion Rate -->
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-4xl text-orange-500">trending_up</span>
+</div>
+<p class="text-xs font-medium text-slate-500 dark:text-slate-400">Conversion</p>
+<div class="flex items-baseline gap-2 mt-1">
+<h3 class="text-xl font-bold text-slate-900 dark:text-white">3.2%</h3>
+<span class="text-[10px] font-bold text-red-500 bg-red-500/10 px-1.5 py-0.5 rounded-full flex items-center">
+<span class="material-symbols-outlined text-[10px] mr-0.5">arrow_downward</span> 1%
+                    </span>
+</div>
+<!-- Sparkline placeholder -->
+<div class="h-8 mt-3 w-full">
+<svg class="w-full h-full stroke-orange-500 fill-none stroke-2" preserveaspectratio="none" viewbox="0 0 100 30">
+<path d="M0 10 C 20 15, 40 10, 60 20 C 80 25, 90 22, 100 28" vector-effect="non-scaling-stroke"></path>
+<path class="stroke-none fill-orange-500/10" d="M0 10 C 20 15, 40 10, 60 20 C 80 25, 90 22, 100 28 V 30 H 0 Z"></path>
+</svg>
+</div>
+</div>
+</div>
+<!-- Weekly Summary Chart -->
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-base font-bold text-slate-900 dark:text-white">Revenue Trend</h3>
+<span class="text-xs text-primary font-medium cursor-pointer">View Report</span>
+</div>
+<div class="h-32 w-full flex items-end gap-2">
+<!-- Simple Bar Chart representation -->
+<div class="flex-1 bg-slate-200 dark:bg-slate-700 rounded-t-sm h-[40%] hover:bg-primary/60 transition-colors"></div>
+<div class="flex-1 bg-slate-200 dark:bg-slate-700 rounded-t-sm h-[60%] hover:bg-primary/60 transition-colors"></div>
+<div class="flex-1 bg-slate-200 dark:bg-slate-700 rounded-t-sm h-[50%] hover:bg-primary/60 transition-colors"></div>
+<div class="flex-1 bg-slate-200 dark:bg-slate-700 rounded-t-sm h-[70%] hover:bg-primary/60 transition-colors"></div>
+<div class="flex-1 bg-slate-200 dark:bg-slate-700 rounded-t-sm h-[55%] hover:bg-primary/60 transition-colors"></div>
+<div class="flex-1 bg-slate-200 dark:bg-slate-700 rounded-t-sm h-[85%] hover:bg-primary/60 transition-colors"></div>
+<div class="flex-1 bg-primary rounded-t-sm h-[95%] shadow-[0_0_10px_rgba(37,140,244,0.3)]"></div>
+</div>
+<div class="flex justify-between mt-2 text-[10px] text-slate-500 dark:text-slate-400 font-medium">
+<span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+</div>
+</div>
+<!-- Recent Activity List -->
+<div>
+<div class="flex items-center justify-between mb-3 px-1">
+<h2 class="text-lg font-bold">Recent Activity</h2>
+<a class="text-xs text-primary" href="#">See All</a>
+</div>
+<div class="space-y-3">
+<!-- Activity Item 1 -->
+<div class="flex items-start gap-3 bg-surface-light dark:bg-surface-dark p-3 rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center shrink-0 text-green-500">
+<span class="material-symbols-outlined text-xl">check_circle</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-medium text-slate-900 dark:text-white">Booking #1234 Confirmed</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Villa Rose • Luxury Suite</p>
+<p class="text-[10px] text-slate-400 mt-2">2 mins ago</p>
+</div>
+<span class="text-xs font-bold text-slate-900 dark:text-white">$450</span>
+</div>
+<!-- Activity Item 2 -->
+<div class="flex items-start gap-3 bg-surface-light dark:bg-surface-dark p-3 rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center shrink-0 text-blue-500">
+<span class="material-symbols-outlined text-xl">person_add</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-medium text-slate-900 dark:text-white">New User Registration</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Sarah J. joined via Referral</p>
+<p class="text-[10px] text-slate-400 mt-2">15 mins ago</p>
+</div>
+</div>
+<!-- Activity Item 3 -->
+<div class="flex items-start gap-3 bg-surface-light dark:bg-surface-dark p-3 rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="w-10 h-10 rounded-full bg-orange-500/20 flex items-center justify-center shrink-0 text-orange-500">
+<span class="material-symbols-outlined text-xl">support_agent</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-medium text-slate-900 dark:text-white">Support Ticket #892</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Payment issue reported by Mike T.</p>
+<p class="text-[10px] text-slate-400 mt-2">1 hour ago</p>
+</div>
+<span class="bg-orange-500/10 text-orange-500 text-[10px] px-2 py-1 rounded font-medium">Pending</span>
+</div>
+<!-- Activity Item 4 -->
+<div class="flex items-start gap-3 bg-surface-light dark:bg-surface-dark p-3 rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center shrink-0 text-purple-500">
+<span class="material-symbols-outlined text-xl">hotel_class</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-medium text-slate-900 dark:text-white">New Hotel Added</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Seaside Paradise Resort • Bali</p>
+<p class="text-[10px] text-slate-400 mt-2">3 hours ago</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button -->
+<div class="fixed bottom-24 right-4 z-30 group">
+<div class="absolute bottom-16 right-0 flex flex-col items-end space-y-3 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-all duration-300 translate-y-4 group-hover:translate-y-0">
+<button class="flex items-center gap-2">
+<span class="bg-surface-dark text-white text-xs py-1 px-2 rounded shadow-lg">Add Hotel</span>
+<div class="w-10 h-10 bg-primary rounded-full shadow-lg flex items-center justify-center text-white hover:bg-primary/90">
+<span class="material-symbols-outlined text-xl">add_business</span>
+</div>
+</button>
+<button class="flex items-center gap-2">
+<span class="bg-surface-dark text-white text-xs py-1 px-2 rounded shadow-lg">Create Coupon</span>
+<div class="w-10 h-10 bg-primary rounded-full shadow-lg flex items-center justify-center text-white hover:bg-primary/90">
+<span class="material-symbols-outlined text-xl">local_offer</span>
+</div>
+</button>
+</div>
+<button class="w-14 h-14 bg-primary rounded-full shadow-xl flex items-center justify-center text-white hover:bg-primary/90 transition-transform active:scale-95">
+<span class="material-symbols-outlined text-2xl group-hover:rotate-45 transition-transform duration-300">add</span>
+</button>
+</div>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 w-full border-t border-slate-200 dark:border-slate-800 bg-surface-light dark:bg-surface-dark z-20 pb-safe">
+<div class="flex justify-between items-center px-6 py-3">
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined text-[24px]">dashboard</span>
+<span class="text-[10px] font-medium">Overview</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">calendar_month</span>
+<span class="text-[10px] font-medium">Bookings</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">group</span>
+<span class="text-[10px] font-medium">Users</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">settings</span>
+<span class="text-[10px] font-medium">Settings</span>
+</a>
+</div>
+<!-- Safe area spacing for iOS home indicator -->
+<div class="h-4 w-full"></div>
+</nav>
+</body></html>

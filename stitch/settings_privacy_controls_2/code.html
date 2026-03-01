@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>LoveNest - Settings &amp; Privacy</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#bd0f49", // Burgundy
+              "primary-soft": "#fdf2f6",
+              "primary-dark-soft": "#3d101e",
+              "background-light": "#faf9f9", // Very soft off-white
+              "background-dark": "#1a1a1a", // Deep charcoal
+              "surface-light": "#ffffff",
+              "surface-dark": "#262626",
+              "text-main": "#1e293b",
+              "text-muted": "#64748b",
+              "divider-light": "#f1f5f9",
+              "divider-dark": "#333333",
+            },
+            fontFamily: {
+              "display": ["Plus Jakarta Sans", "sans-serif"]
+            },
+            boxShadow: {
+                'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.03)',
+                'glass': '0 4px 30px rgba(0, 0, 0, 0.1)',
+                'inner-toggle': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
+            },
+            backdropBlur: {
+                'glass': '12px',
+            }
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+        -webkit-tap-highlight-color: transparent;
+    }
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }.toggle-checkbox:checked {
+        right: 0;
+        border-color: #bd0f49;
+    }
+    .toggle-checkbox:checked + .toggle-label {
+        background-color: #bd0f49;
+    }.no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }.glass-nav {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .dark .glass-nav {
+        background: rgba(26, 26, 26, 0.7);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }.active-scale:active {
+        transform: scale(0.98);
+    }
+</style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-text-main dark:text-slate-100 font-display min-h-screen flex flex-col antialiased selection:bg-primary selection:text-white">
+<div class="fixed top-0 w-full z-50 glass-nav transition-colors duration-300">
+<div class="flex items-center justify-between px-6 h-[88px] pt-[30px]"> 
+<button class="flex items-center justify-center size-10 rounded-full hover:bg-slate-100 dark:hover:bg-surface-dark transition-colors text-slate-900 dark:text-slate-100 active-scale">
+<span class="material-symbols-outlined !text-[24px]">arrow_back</span>
+</button>
+<h1 class="text-base font-semibold tracking-wide opacity-90">Settings</h1>
+<div class="size-10"></div>
+</div>
+</div>
+<main class="flex-1 overflow-y-auto pt-[100px] pb-32 px-5 space-y-6 no-scrollbar">
+<section>
+<h3 class="text-slate-400 dark:text-slate-500 text-xs font-semibold uppercase tracking-widest mb-3 pl-1">Account &amp; Security</h3>
+<div class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-soft overflow-hidden">
+<button class="w-full flex items-center justify-between p-5 hover:bg-slate-50 dark:hover:bg-primary-dark-soft/30 transition-colors group active-scale">
+<div class="flex items-center gap-4">
+<div class="size-10 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined !text-[20px]">lock</span>
+</div>
+<div class="text-left">
+<p class="font-medium text-[15px] text-slate-900 dark:text-slate-100">Change Password</p>
+<p class="text-[13px] text-slate-500 dark:text-slate-400 mt-0.5 font-light">Last changed 3 months ago</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-300 dark:text-slate-600 group-hover:text-primary transition-colors !text-[20px]">arrow_forward_ios</span>
+</button>
+<div class="h-px w-full bg-divider-light dark:bg-divider-dark ml-[72px]"></div>
+<button class="w-full flex items-center justify-between p-5 hover:bg-slate-50 dark:hover:bg-primary-dark-soft/30 transition-colors group active-scale">
+<div class="flex items-center gap-4">
+<div class="size-10 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined !text-[20px]">devices</span>
+</div>
+<div class="text-left">
+<p class="font-medium text-[15px] text-slate-900 dark:text-slate-100">Active Sessions</p>
+<p class="text-[13px] text-slate-500 dark:text-slate-400 mt-0.5 font-light">iPhone 14 Pro, MacBook Air</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-300 dark:text-slate-600 group-hover:text-primary transition-colors !text-[20px]">arrow_forward_ios</span>
+</button>
+</div>
+</section>
+<section>
+<h3 class="text-slate-400 dark:text-slate-500 text-xs font-semibold uppercase tracking-widest mb-3 pl-1">Notifications</h3>
+<div class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-soft overflow-hidden">
+<div class="flex items-center justify-between p-5 hover:bg-slate-50/50 dark:hover:bg-primary-dark-soft/10 transition-colors">
+<div class="flex items-center gap-4">
+<div class="size-10 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined !text-[20px]">confirmation_number</span>
+</div>
+<div>
+<p class="font-medium text-[15px] text-slate-900 dark:text-slate-100">Booking Confirmations</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-12 h-7 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-5 rtl:peer-checked:after:-translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all after:shadow-sm dark:border-gray-600 peer-checked:bg-primary"></div>
+</label>
+</div>
+<div class="h-px w-full bg-divider-light dark:bg-divider-dark ml-[72px]"></div>
+<div class="flex items-center justify-between p-5 hover:bg-slate-50/50 dark:hover:bg-primary-dark-soft/10 transition-colors">
+<div class="flex items-center gap-4">
+<div class="size-10 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined !text-[20px]">price_change</span>
+</div>
+<div>
+<p class="font-medium text-[15px] text-slate-900 dark:text-slate-100">Price Drop Alerts</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-12 h-7 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-5 rtl:peer-checked:after:-translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all after:shadow-sm dark:border-gray-600 peer-checked:bg-primary"></div>
+</label>
+</div>
+<div class="h-px w-full bg-divider-light dark:bg-divider-dark ml-[72px]"></div>
+<div class="flex items-center justify-between p-5 hover:bg-slate-50/50 dark:hover:bg-primary-dark-soft/10 transition-colors">
+<div class="flex items-center gap-4">
+<div class="size-10 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined !text-[20px]">favorite_border</span>
+</div>
+<div>
+<p class="font-medium text-[15px] text-slate-900 dark:text-slate-100">Romantic Offers</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox" value=""/>
+<div class="w-12 h-7 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-5 rtl:peer-checked:after:-translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all after:shadow-sm dark:border-gray-600 peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+</section>
+<section>
+<h3 class="text-slate-400 dark:text-slate-500 text-xs font-semibold uppercase tracking-widest mb-3 pl-1">Privacy</h3>
+<div class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-soft overflow-hidden">
+<div class="flex items-center justify-between p-5 hover:bg-slate-50/50 dark:hover:bg-primary-dark-soft/10 transition-colors">
+<div class="flex items-center gap-4">
+<div class="size-10 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined !text-[20px]">visibility_off</span>
+</div>
+<div>
+<p class="font-medium text-[15px] text-slate-900 dark:text-slate-100">Anonymous Reviews</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-12 h-7 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-5 rtl:peer-checked:after:-translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all after:shadow-sm dark:border-gray-600 peer-checked:bg-primary"></div>
+</label>
+</div>
+<div class="h-px w-full bg-divider-light dark:bg-divider-dark ml-[72px]"></div>
+<div class="flex items-center justify-between p-5 hover:bg-slate-50/50 dark:hover:bg-primary-dark-soft/10 transition-colors">
+<div class="flex items-center gap-4">
+<div class="size-10 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined !text-[20px]">account_circle</span>
+</div>
+<div>
+<p class="font-medium text-[15px] text-slate-900 dark:text-slate-100">Hide Profile Photo</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox" value=""/>
+<div class="w-12 h-7 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-5 rtl:peer-checked:after:-translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all after:shadow-sm dark:border-gray-600 peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+</section>
+<section>
+<h3 class="text-slate-400 dark:text-slate-500 text-xs font-semibold uppercase tracking-widest mb-3 pl-1">App Preferences</h3>
+<div class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-soft overflow-hidden">
+<div class="flex items-center justify-between p-5 hover:bg-slate-50/50 dark:hover:bg-primary-dark-soft/10 transition-colors">
+<div class="flex items-center gap-4">
+<div class="size-10 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined !text-[20px]">dark_mode</span>
+</div>
+<div>
+<p class="font-medium text-[15px] text-slate-900 dark:text-slate-100">Dark Mode</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-12 h-7 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-5 rtl:peer-checked:after:-translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all after:shadow-sm dark:border-gray-600 peer-checked:bg-primary"></div>
+</label>
+</div>
+<div class="h-px w-full bg-divider-light dark:bg-divider-dark ml-[72px]"></div>
+<button class="w-full flex items-center justify-between p-5 hover:bg-slate-50 dark:hover:bg-primary-dark-soft/30 transition-colors group active-scale">
+<div class="flex items-center gap-4">
+<div class="size-10 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined !text-[20px]">currency_exchange</span>
+</div>
+<div class="text-left">
+<p class="font-medium text-[15px] text-slate-900 dark:text-slate-100">Currency</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[13px] font-medium text-slate-400 dark:text-slate-500">USD ($)</span>
+<span class="material-symbols-outlined text-slate-300 dark:text-slate-600 group-hover:text-primary transition-colors !text-[20px]">arrow_forward_ios</span>
+</div>
+</button>
+</div>
+</section>
+<div class="pt-4 pb-4">
+<button class="w-full py-4 rounded-xl text-red-500/80 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 transition-all text-sm font-medium tracking-wide active-scale">
+            Delete Account
+        </button>
+<p class="text-center text-[10px] text-slate-400 mt-2">LoveNest v2.4.0 (Build 302)</p>
+</div>
+</main>
+<nav class="fixed bottom-0 w-full glass-nav z-40 pb-safe">
+<div class="flex justify-around items-center px-4 pb-4 pt-3">
+<a class="flex flex-col items-center gap-1.5 group w-16" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors !text-[24px]">search</span>
+<span class="text-[10px] font-medium text-slate-400 group-hover:text-primary transition-colors">Explore</span>
+</a>
+<a class="flex flex-col items-center gap-1.5 group w-16" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors !text-[24px]">favorite</span>
+<span class="text-[10px] font-medium text-slate-400 group-hover:text-primary transition-colors">Saved</span>
+</a>
+<a class="flex flex-col items-center gap-1.5 group w-16" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors !text-[24px]">calendar_today</span>
+<span class="text-[10px] font-medium text-slate-400 group-hover:text-primary transition-colors">Bookings</span>
+</a>
+<a class="flex flex-col items-center gap-1.5 group w-16 relative" href="#">
+<div class="absolute -top-1 w-8 h-8 bg-primary/10 dark:bg-primary/20 rounded-full blur-lg opacity-50"></div>
+<span class="material-symbols-outlined text-primary !text-[24px] fill-current">settings</span>
+<span class="text-[10px] font-semibold text-primary">Settings</span>
+</a>
+</div>
+</nav>
+<style>
+    .pb-safe {
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+</style>
+
+</body></html>

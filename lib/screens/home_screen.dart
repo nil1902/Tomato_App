@@ -18,6 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<dynamic> _hotels = [];
   bool _isLoading = true;
   int _unreadNotifications = 0;
+  String _selectedCategory = 'Couple Friendly ❤️';
 
   @override
   void initState() {
@@ -256,11 +257,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     scrollDirection: Axis.horizontal,
                     padding: const EdgeInsets.symmetric(horizontal: 24.0),
                     children: [
-                      _buildCategoryChip(theme, 'Couple Friendly ❤️', true),
-                      _buildCategoryChip(theme, 'Privacy Assured 🔒', false),
-                      _buildCategoryChip(theme, 'Romantic', false),
-                      _buildCategoryChip(theme, 'Popular', false),
-                      _buildCategoryChip(theme, 'Local ID Accepted', false),
+                      _buildCategoryChip(theme, 'Couple Friendly ❤️'),
+                      _buildCategoryChip(theme, 'Privacy Assured 🔒'),
+                      _buildCategoryChip(theme, 'Romantic'),
+                      _buildCategoryChip(theme, 'Popular'),
+                      _buildCategoryChip(theme, 'Local ID Accepted'),
                     ],
                   ),
                 ),
@@ -306,7 +307,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               )
-            else if (_hotels.isEmpty)
+            else if (_filteredHotels.isEmpty)
               SliverToBoxAdapter(
                 child: SizedBox(
                   height: 320,
@@ -322,7 +323,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Check back later for romantic getaways',
+                          'Change category to see more getaways',
                           style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary.withOpacity(0.7)),
                         ),
                       ],
@@ -337,9 +338,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    itemCount: _hotels.length > 5 ? 5 : _hotels.length,
+                    itemCount: _filteredHotels.length,
                     itemBuilder: (context, index) {
-                      final hotel = _hotels[index];
+                      final hotel = _filteredHotels[index];
                       return _buildHotelCard(
                         context,
                         id: hotel['id']?.toString() ?? 'hotel_$index',
@@ -385,7 +386,23 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildCategoryChip(ThemeData theme, String label, bool isSelected) {
+  List<dynamic> get _filteredHotels {
+    if (_selectedCategory == 'Couple Friendly ❤️') {
+      return _hotels;
+    } else if (_selectedCategory == 'Privacy Assured 🔒') {
+      return _hotels.where((h) => (h['privacy_assured'] ?? true) == true).toList();
+    } else if (_selectedCategory == 'Romantic') {
+      return _hotels.where((h) => ((h['couple_rating'] ?? h['star_rating'] ?? 0).toDouble() >= 4.5)).toList();
+    } else if (_selectedCategory == 'Popular') {
+       return _hotels.where((h) => ((h['star_rating'] ?? 0).toDouble() >= 4.0 || (h['couple_rating'] ?? 0).toDouble() >= 4.0)).toList();
+    } else if (_selectedCategory == 'Local ID Accepted') {
+      return _hotels.where((h) => (h['local_id_accepted'] ?? true) == true).toList();
+    }
+    return _hotels;
+  }
+
+  Widget _buildCategoryChip(ThemeData theme, String label) {
+    bool isSelected = _selectedCategory == label;
     return Container(
       margin: const EdgeInsets.only(right: 12),
       decoration: BoxDecoration(
@@ -406,7 +423,11 @@ class _HomeScreenState extends State<HomeScreen> {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(20),
-          onTap: () {},
+          onTap: () {
+            setState(() {
+              _selectedCategory = label;
+            });
+          },
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
             child: Center(

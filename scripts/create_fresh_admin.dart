@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:http/http.dart' as http;
 
 const String baseUrl = 'https://nukpc39r.ap-southeast.insforge.app';
@@ -168,7 +167,7 @@ Future<void> _setAdminRole(String accessToken, String userId, String name, Strin
 }
 
 void _printSuccess(String email, String password) {
-  print('\n' + '='*70);
+  print('\n${'='*70}');
   print('🎉 ADMIN ACCOUNT READY!');
   print('='*70);
   print('\n📧 Login Credentials:');
@@ -185,7 +184,7 @@ void _printSuccess(String email, String password) {
 }
 
 void _printManualInstructions(String email) {
-  print('\n' + '='*70);
+  print('\n${'='*70}');
   print('⚠️  MANUAL SETUP NEEDED');
   print('='*70);
   print('\nRun this SQL in your InsForge database:');
@@ -200,7 +199,7 @@ void _printManualInstructions(String email) {
 }
 
 void _printAlternativeSolution() {
-  print('\n' + '='*70);
+  print('\n${'='*70}');
   print('💡 ALTERNATIVE SOLUTIONS');
   print('='*70);
   print('\n1. USE YOUR EXISTING ACCOUNT:');

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LoveNest Discovery Home</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ff385d",
+                        "background-light": "#f8f5f6",
+                        "background-dark": "#230f13",
+                        "surface-dark": "#36171d",
+                        "surface-light": "#ffffff",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen flex flex-col antialiased">
+<!-- Header & Search Section -->
+<header class="sticky top-0 z-20 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md border-b border-primary/10 pb-4">
+<!-- Top Bar -->
+<div class="flex items-center justify-between px-4 pt-4 pb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-3xl">favorite</span>
+<h1 class="text-xl font-bold tracking-tight">LoveNest</h1>
+</div>
+<button class="relative p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-300">notifications</span>
+<span class="absolute top-2 right-2 h-2 w-2 rounded-full bg-primary border-2 border-background-light dark:border-background-dark"></span>
+</button>
+</div>
+<!-- Greeting -->
+<div class="px-4 py-2">
+<h2 class="text-2xl font-bold leading-tight">Find your romantic <br/>escape, Alex</h2>
+</div>
+<!-- Search Bar -->
+<div class="px-4 mt-2">
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-primary">search</span>
+</div>
+<input class="block w-full pl-10 pr-3 py-3 border-none rounded-xl bg-white dark:bg-surface-dark text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/40 focus:ring-2 focus:ring-primary shadow-sm" placeholder="Where to?" type="text"/>
+</div>
+</div>
+<!-- Date Pickers -->
+<div class="flex gap-3 px-4 mt-3">
+<div class="flex-1 relative">
+<label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1 pl-1">Check-in</label>
+<div class="relative">
+<input class="block w-full pl-3 pr-10 py-2.5 border-none rounded-xl bg-white dark:bg-surface-dark text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-primary shadow-sm" placeholder="Add dates" type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-primary text-lg pointer-events-none">calendar_today</span>
+</div>
+</div>
+<div class="flex-1 relative">
+<label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1 pl-1">Check-out</label>
+<div class="relative">
+<input class="block w-full pl-3 pr-10 py-2.5 border-none rounded-xl bg-white dark:bg-surface-dark text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-primary shadow-sm" placeholder="Add dates" type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-primary text-lg pointer-events-none">calendar_today</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto pb-24">
+<!-- Categories -->
+<section class="mt-6">
+<div class="flex gap-3 px-4 overflow-x-auto hide-scrollbar snap-x">
+<button class="snap-start shrink-0 px-4 py-2 bg-primary text-white rounded-full text-sm font-medium shadow-lg shadow-primary/30 whitespace-nowrap">
+                    All Stays
+                </button>
+<button class="snap-start shrink-0 px-4 py-2 bg-white dark:bg-surface-dark text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-white/10 rounded-full text-sm font-medium whitespace-nowrap hover:bg-primary/5 dark:hover:bg-primary/20 hover:text-primary dark:hover:text-primary transition-colors">
+                    Honeymoon Suite
+                </button>
+<button class="snap-start shrink-0 px-4 py-2 bg-white dark:bg-surface-dark text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-white/10 rounded-full text-sm font-medium whitespace-nowrap hover:bg-primary/5 dark:hover:bg-primary/20 hover:text-primary dark:hover:text-primary transition-colors">
+                    Private Villas
+                </button>
+<button class="snap-start shrink-0 px-4 py-2 bg-white dark:bg-surface-dark text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-white/10 rounded-full text-sm font-medium whitespace-nowrap hover:bg-primary/5 dark:hover:bg-primary/20 hover:text-primary dark:hover:text-primary transition-colors">
+                    Anniversary
+                </button>
+</div>
+</section>
+<!-- Curated for Couples (Horizontal Scroll) -->
+<section class="mt-8">
+<div class="flex items-center justify-between px-4 mb-4">
+<h3 class="text-lg font-bold">Curated for Couples</h3>
+<a class="text-sm text-primary font-medium hover:underline" href="#">See all</a>
+</div>
+<div class="flex gap-4 px-4 overflow-x-auto hide-scrollbar snap-x pb-4">
+<!-- Card 1 -->
+<div class="snap-center shrink-0 w-[280px] relative group cursor-pointer">
+<div class="relative aspect-[4/5] rounded-2xl overflow-hidden">
+<img alt="Luxury villa with private pool at sunset" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Luxury villa with private pool at sunset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuDi5xDtHt5vNwYSVaTeIffpXbwBUQdc1qhDjQKQKZ-EQ7T1wYZhcOLlxm7lsjsC-ImZnVfVyqb_siqryosJBYt5nPgGbv37Ajg5hbSwufDIWYLp8q2qWZLKlB8qugJsGjTH5cJxaBmPBF8R57UzZEFJyAKCAD_Y-nwz29jwgvBK3vyofSWdUcBYX00ZwMwwqaictsSdCpNCtGuWarq6eVdgKc8MogfBhz7FJmHvuez4h8tr68KVzUpBnRRD_FYQVFA3BjUj5W1zU"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+<div class="absolute top-3 right-3">
+<button class="bg-white/20 backdrop-blur-sm p-2 rounded-full hover:bg-white/40 transition-colors">
+<span class="material-symbols-outlined text-white text-xl fill-current">favorite_border</span>
+</button>
+</div>
+<div class="absolute bottom-4 left-4 right-4 text-white">
+<div class="flex items-center gap-1 mb-1">
+<span class="bg-primary/90 text-xs px-2 py-0.5 rounded text-white font-semibold">Rare Find</span>
+<div class="flex items-center gap-0.5 text-yellow-400 text-xs font-bold">
+<span class="material-symbols-outlined text-[14px] fill-current">star</span>
+                                    4.9
+                                </div>
+</div>
+<h4 class="font-bold text-lg leading-tight mb-1">Santorini Cave Suite</h4>
+<p class="text-sm text-white/80 font-light mb-2">Greece</p>
+<div class="flex items-end gap-1">
+<span class="font-bold text-xl">$450</span>
+<span class="text-sm text-white/70 mb-0.5">/ night</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="snap-center shrink-0 w-[280px] relative group cursor-pointer">
+<div class="relative aspect-[4/5] rounded-2xl overflow-hidden">
+<img alt="Modern bedroom with ocean view" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Modern bedroom with ocean view" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCt_2AWyoTs9DEWJtF3hkWeeg4sZOP38ZulT-RbatSkTlV0bzVNE10AX6nyMmjrpsvYd3Up16QhPZYBbX8Akw4L26yfj8I_a-CJGZ2S4Pv1ujNKdImLhWk4ki7s34Key6SZn9lm5yqVp57P4hjZR8l9DucFfAlpwcNNJ_R2zoVnhJhan-zltTd3NjrtPGltaaIL7DwDwbAfjBGsv2dtFpfvxstCeuh3r7o8-ONfbDc5RDPd1UJfi_kEki0ZyFyK938A0NmtrXM9E-U"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+<div class="absolute top-3 right-3">
+<button class="bg-white/20 backdrop-blur-sm p-2 rounded-full hover:bg-white/40 transition-colors">
+<span class="material-symbols-outlined text-white text-xl">favorite_border</span>
+</button>
+</div>
+<div class="absolute bottom-4 left-4 right-4 text-white">
+<div class="flex items-center gap-1 mb-1">
+<div class="flex items-center gap-0.5 text-yellow-400 text-xs font-bold">
+<span class="material-symbols-outlined text-[14px] fill-current">star</span>
+                                    4.8
+                                </div>
+</div>
+<h4 class="font-bold text-lg leading-tight mb-1">Oceanfront Zen</h4>
+<p class="text-sm text-white/80 font-light mb-2">Maldives</p>
+<div class="flex items-end gap-1">
+<span class="font-bold text-xl">$820</span>
+<span class="text-sm text-white/70 mb-0.5">/ night</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="snap-center shrink-0 w-[280px] relative group cursor-pointer">
+<div class="relative aspect-[4/5] rounded-2xl overflow-hidden">
+<img alt="Cozy cabin with fireplace in snowy mountains" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Cozy cabin with fireplace in snowy mountains" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCV20xpP8y1Eyu4TeZMhb1UBs2-giYPiurouBmd7qdSUJe4UJ3pQkFm-xOLUFyeJQWm_B9icIG-ikMq2gtBaSq6iOKK0ac6gqhx6ktkHSJJk_CVGTBEuimvNxPANXQsdLhEJrlsXZ2xVY2CqWQzQazxMBaT5pU7ntU4GXBWjxObjmhElNGN43JXl9YUePFqXKQm0xgONNRtLwcvY2fFvkv5m0k5FWMIUKarl4Fq2jsqw_nA2p4IBQ7i8vwx-NYvN186ChVcGUv5aDQ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+<div class="absolute top-3 right-3">
+<button class="bg-white/20 backdrop-blur-sm p-2 rounded-full hover:bg-white/40 transition-colors">
+<span class="material-symbols-outlined text-white text-xl">favorite_border</span>
+</button>
+</div>
+<div class="absolute bottom-4 left-4 right-4 text-white">
+<div class="flex items-center gap-1 mb-1">
+<div class="flex items-center gap-0.5 text-yellow-400 text-xs font-bold">
+<span class="material-symbols-outlined text-[14px] fill-current">star</span>
+                                    4.95
+                                </div>
+</div>
+<h4 class="font-bold text-lg leading-tight mb-1">Alpine Love Nest</h4>
+<p class="text-sm text-white/80 font-light mb-2">Switzerland</p>
+<div class="flex items-end gap-1">
+<span class="font-bold text-xl">$380</span>
+<span class="text-sm text-white/70 mb-0.5">/ night</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Weekend Getaways (Vertical List) -->
+<section class="mt-4 px-4">
+<h3 class="text-lg font-bold mb-4">Weekend Getaways</h3>
+<div class="space-y-4">
+<!-- List Item 1 -->
+<div class="bg-white dark:bg-surface-dark rounded-xl p-3 flex gap-4 shadow-sm">
+<div class="w-24 h-24 rounded-lg overflow-hidden shrink-0">
+<img alt="Interior of a modern hotel room" class="w-full h-full object-cover" data-alt="Interior of a modern hotel room" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBreVcLEfKs1Q2NfQ6u3hT4kdBQqNxpyWykQJN0s0A85RxAYbPuPAk1vAW9FyAC6DpzKtMs6euFcmUuk0FM0sf4iGKSGO8nwEzSMrP_KwCzHbxKr2bCTeBp0SPIUtFdib1H5b2RgfoLXaqKGusUE2Vhl1X-pkg6uMdUuEUVmsoFdlFkHVWNkGhxSD2jeNdFsQuOKBnEGTmhJEKFp-sUNgs7jnI1NYeTTTK1b_1DBEkSarQXNr2V9GeYzUp62B-RweJgpVWVb8DrDDI"/>
+</div>
+<div class="flex-1 flex flex-col justify-between py-0.5">
+<div>
+<div class="flex justify-between items-start">
+<h4 class="font-bold text-base text-slate-900 dark:text-white line-clamp-1">Venetian Romance</h4>
+<span class="material-symbols-outlined text-primary text-xl cursor-pointer">favorite</span>
+</div>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Venice, Italy</p>
+</div>
+<div class="flex items-center justify-between mt-2">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-primary text-sm">favorite</span>
+<span class="text-xs font-medium text-slate-700 dark:text-slate-300">9.8 Couple Rating</span>
+</div>
+<div class="text-right">
+<span class="block font-bold text-lg text-slate-900 dark:text-white">$220</span>
+</div>
+</div>
+</div>
+</div>
+<!-- List Item 2 -->
+<div class="bg-white dark:bg-surface-dark rounded-xl p-3 flex gap-4 shadow-sm">
+<div class="w-24 h-24 rounded-lg overflow-hidden shrink-0">
+<img alt="Luxury hotel dining area with view" class="w-full h-full object-cover" data-alt="Luxury hotel dining area with view" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbNcqe5FFegJ-13ZU9F6Eo35jE9sZAq8ZokctrGW651KR1hiGiDNZdbVXHkIEWHxNPBsDXlYbVH74C9YYtu8ZhuLyCtAQQFQNRGptw6OY-HJ-TpKuUkaVi9ls87-XzVi1RxhkQtQ7TYxFfpmVFNGr1O_sWIB4IrJHyDhaYu90GnGp4tPq3CWGsQBzwVQdPEwkzAVXBttP7VrLkHHWC_1OqXPl98qIsHS0Rrdm2G5HvEHdCeEgBfNZHfqwbHmvuP_zI2LK6PNKe1zQ"/>
+</div>
+<div class="flex-1 flex flex-col justify-between py-0.5">
+<div>
+<div class="flex justify-between items-start">
+<h4 class="font-bold text-base text-slate-900 dark:text-white line-clamp-1">Parisian Loft</h4>
+<span class="material-symbols-outlined text-slate-400 dark:text-slate-500 text-xl cursor-pointer hover:text-primary transition-colors">favorite</span>
+</div>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Paris, France</p>
+</div>
+<div class="flex items-center justify-between mt-2">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-primary text-sm">favorite</span>
+<span class="text-xs font-medium text-slate-700 dark:text-slate-300">9.5 Couple Rating</span>
+</div>
+<div class="text-right">
+<span class="block font-bold text-lg text-slate-900 dark:text-white">$310</span>
+</div>
+</div>
+</div>
+</div>
+<!-- List Item 3 -->
+<div class="bg-white dark:bg-surface-dark rounded-xl p-3 flex gap-4 shadow-sm">
+<div class="w-24 h-24 rounded-lg overflow-hidden shrink-0">
+<img alt="Tropical resort pool area" class="w-full h-full object-cover" data-alt="Tropical resort pool area" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwFhu7QsP62opJovj-cPkzkfX262W7bLi0cLws_dZ6fb0oNglI9eVKgyX2KuttiN6p3avSxDIW8BX17ZkvrgA8cXYAfcFnntXJLsNEqoJikfGtjjwnbGV8w-1BT9mnYt6lSyl7nuBmJNA1B3suYcj4BJ-cJeE0a-n5OX9DDJABMgCZIbszZ9phXhm0993CGACl83TVE-CEHfDIxZR6oa1_kmMirexmO5sZl86wFnpMoHezmzsUwjY7KGIdHVdaDxb3GqAKPMgeC8A"/>
+</div>
+<div class="flex-1 flex flex-col justify-between py-0.5">
+<div>
+<div class="flex justify-between items-start">
+<h4 class="font-bold text-base text-slate-900 dark:text-white line-clamp-1">Bali Jungle Retreat</h4>
+<span class="material-symbols-outlined text-slate-400 dark:text-slate-500 text-xl cursor-pointer hover:text-primary transition-colors">favorite</span>
+</div>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Ubud, Bali</p>
+</div>
+<div class="flex items-center justify-between mt-2">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-primary text-sm">favorite</span>
+<span class="text-xs font-medium text-slate-700 dark:text-slate-300">9.9 Couple Rating</span>
+</div>
+<div class="text-right">
+<span class="block font-bold text-lg text-slate-900 dark:text-white">$180</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="mt-8 px-4 pb-8">
+<div class="relative w-full h-40 rounded-2xl overflow-hidden flex items-center justify-center">
+<img alt="Wine glasses on a table with sunset background" class="absolute inset-0 w-full h-full object-cover" data-alt="Wine glasses on a table with sunset background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtsRDL7x8-AOB79y_p0CLCHyMozuWVqGg3Tfa2WMRMqjQjKpgdQg5SAldQ8NzoZpe_O9TTnEnL7YC25I8TSm5PCI8m8p1gFfvI_MhJ6_v3kvMr_SaYmMrRh5byAlUBUciLAMe3uyasaa6cpjvKZCnY2ZSPKa2gF9x8T3T_WUqXIeZPxOdUuA7TwY1CwVzkbPqAaIUjCS2gGO-DHroN1EtXPIQfR7JTK3ajAco_6_rdY9tf8OsevtMjPfC9Rloa36hPQfOQvN6qzrE"/>
+<div class="absolute inset-0 bg-primary/80 mix-blend-multiply"></div>
+<div class="relative z-10 text-center px-4">
+<h3 class="text-white font-bold text-xl mb-2">Anniversary Special</h3>
+<p class="text-white/90 text-sm mb-4">Get up to 20% off on premium suites for your special day.</p>
+<button class="bg-white text-primary px-6 py-2 rounded-full text-sm font-bold shadow-lg hover:bg-slate-50 transition-colors">Explore Deals</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Nav Bar -->
+<nav class="fixed bottom-0 w-full z-30 bg-background-light dark:bg-surface-dark border-t border-slate-200 dark:border-white/5 pb-5 pt-3 px-6">
+<div class="flex justify-between items-center">
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined text-[28px] fill-1">search</span>
+<span class="text-[10px] font-medium">Explore</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[28px]">favorite</span>
+<span class="text-[10px] font-medium">Wishlist</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[28px]">calendar_month</span>
+<span class="text-[10px] font-medium">Bookings</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[28px]">person</span>
+<span class="text-[10px] font-medium">Profile</span>
+</a>
+</div>
+</nav>
+</body></html>

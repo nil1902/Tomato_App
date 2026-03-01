@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../services/auth_service.dart';
 import '../../services/admin_service.dart';
+import 'add_banner_screen.dart';
+import 'add_popup_screen.dart';
+import 'add_discount_screen.dart';
 
 /// Promotions Tab - Manage banners, popups, discounts, and advertisements
 class PromotionsTab extends StatefulWidget {
@@ -126,227 +129,26 @@ class _PromotionsTabState extends State<PromotionsTab> {
   void _showAddDialog() {
     switch (_selectedType) {
       case 0:
-        _showAddBannerDialog();
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const AddBannerScreen()),
+        ).then((_) => _triggerRefresh());
         break;
       case 1:
-        _showAddPopupDialog();
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const AddPopupScreen()),
+        ).then((_) => _triggerRefresh());
         break;
       case 2:
-        _showAddCouponDialog();
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const AddDiscountScreen()),
+        ).then((_) => _triggerRefresh());
         break;
     }
   }
 
-  void _showAddBannerDialog() {
-    final titleController = TextEditingController();
-    final descController = TextEditingController();
-    final imageUrlController = TextEditingController();
-    
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Add Banner'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: titleController,
-                decoration: const InputDecoration(labelText: 'Banner Title'),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: descController,
-                decoration: const InputDecoration(labelText: 'Description'),
-                maxLines: 2,
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: imageUrlController,
-                decoration: const InputDecoration(
-                  labelText: 'Image URL',
-                  hintText: 'https://example.com/image.png'
-                ),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              Navigator.pop(context);
-              final auth = context.read<AuthService>();
-              final admin = AdminService(auth.accessToken!);
-              
-              try {
-                await admin.addBanner({
-                  'title': titleController.text,
-                  'description': descController.text,
-                  'is_active': true,
-                  'image_url': imageUrlController.text.isNotEmpty 
-                      ? imageUrlController.text 
-                      : 'https://placehold.co/600x400/png'
-                });
-                
-                if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Banner created successfully!')),
-                  );
-                  _triggerRefresh();
-                }
-              } catch (e) {
-                if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Failed: $e')),
-                  );
-                }
-              }
-            },
-            child: const Text('Create'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showAddPopupDialog() {
-    final titleController = TextEditingController();
-    final discountController = TextEditingController();
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Add Discount Popup'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: titleController,
-                decoration: const InputDecoration(labelText: 'Popup Title'),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: discountController,
-                decoration: const InputDecoration(labelText: 'Discount %'),
-                keyboardType: TextInputType.number,
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              Navigator.pop(context);
-              final auth = context.read<AuthService>();
-              final admin = AdminService(auth.accessToken!);
-              
-              try {
-                await admin.addPopup({
-                  'title': titleController.text,
-                  'discount_percent': int.tryParse(discountController.text) ?? 10,
-                  'is_active': true,
-                });
-                
-                if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Popup created successfully!')),
-                  );
-                  _triggerRefresh();
-                }
-              } catch (e) {
-                if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Failed: $e')),
-                  );
-                }
-              }
-            },
-            child: const Text('Create'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showAddCouponDialog() {
-    final codeController = TextEditingController();
-    final discountController = TextEditingController();
-    final minOrderController = TextEditingController();
-    
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Add Coupon Code'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: codeController,
-                decoration: const InputDecoration(labelText: 'Coupon Code (e.g. SUMMER50)'),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: discountController,
-                decoration: const InputDecoration(labelText: 'Discount % (e.g. 15)'),
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: minOrderController,
-                decoration: const InputDecoration(labelText: 'Min Order Value (₹)'),
-                keyboardType: TextInputType.number,
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              Navigator.pop(context);
-              final auth = context.read<AuthService>();
-              final admin = AdminService(auth.accessToken!);
-              
-              try {
-                await admin.addDiscount({
-                  'code': codeController.text.toUpperCase(),
-                  'discount_percent': int.tryParse(discountController.text) ?? 5,
-                  'min_order_amount': int.tryParse(minOrderController.text) ?? 0,
-                  'is_active': true,
-                });
-                if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Coupon created successfully!')),
-                  );
-                  _triggerRefresh();
-                }
-              } catch (e) {
-                if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Failed: $e')),
-                  );
-                }
-              }
-            },
-            child: const Text('Create'),
-          ),
-        ],
-      ),
-    );
-  }
 }
 
 // Banners View
@@ -382,53 +184,187 @@ class _BannersViewState extends State<_BannersView> {
 
   @override
   Widget build(BuildContext context) {
-    if (_loading) return const Center(child: CircularProgressIndicator());
+    if (_loading) {
+      return const Center(
+        child: CircularProgressIndicator(color: Color(0xFF2563EB)),
+      );
+    }
+    
     if (_banners.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.image, size: 64, color: Colors.grey[400]),
-            const SizedBox(height: 16),
-            Text('No banners yet', style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: Colors.blue.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.image_outlined, size: 64, color: Colors.blue),
+            ),
+            const SizedBox(height: 24),
+            const Text(
+              'No Banners Found',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1E293B)),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Click the "Add Banner" button to create one.',
+              style: TextStyle(fontSize: 15, color: Color(0xFF64748B)),
+            ),
           ],
         ),
       );
     }
 
-    return ListView.builder(
-      padding: const EdgeInsets.all(16),
+    return ListView.separated(
+      padding: const EdgeInsets.all(24),
       itemCount: _banners.length,
+      separatorBuilder: (context, index) => const SizedBox(height: 16),
       itemBuilder: (context, index) {
         final banner = _banners[index];
         final isActive = banner['is_active'] == true;
-        return Card(
-          margin: const EdgeInsets.only(bottom: 12),
-          child: ListTile(
-            leading: banner['image_url'] != null
-                ? Image.network(banner['image_url'], width: 60, height: 60, fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => const Icon(Icons.image, size: 40))
-                : const Icon(Icons.image, size: 40),
-            title: Text(banner['title'] ?? 'Untitled Banner', style: const TextStyle(fontWeight: FontWeight.bold)),
-            subtitle: Text(banner['description'] ?? 'No description'),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
+        
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: const Color(0xFFE2E8F0)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.04),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Switch(
-                  value: isActive,
-                  onChanged: (val) async {
-                    final admin = AdminService(context.read<AuthService>().accessToken!);
-                    await admin.updateBannerStatus(banner['id'], val);
-                    _loadData();
-                  },
+                // Image Section
+                Container(
+                  width: 120,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF1F5F9),
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(16),
+                      bottomLeft: Radius.circular(16),
+                    ),
+                    image: banner['image_url'] != null && banner['image_url'].isNotEmpty
+                        ? DecorationImage(
+                            image: NetworkImage(banner['image_url']),
+                            fit: BoxFit.cover,
+                          )
+                        : null,
+                  ),
+                  child: banner['image_url'] == null || banner['image_url'].isEmpty
+                      ? const Center(child: Icon(Icons.broken_image_outlined, color: Colors.grey, size: 40))
+                      : null,
                 ),
-                IconButton(
-                  icon: const Icon(Icons.delete, color: Colors.red),
-                  onPressed: () async {
-                    final admin = AdminService(context.read<AuthService>().accessToken!);
-                    await admin.deleteBanner(banner['id']);
-                    _loadData();
-                  },
+                
+                // Content Section
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: isActive ? Colors.green.withOpacity(0.1) : Colors.grey.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Text(
+                                isActive ? 'ACTIVE' : 'INACTIVE',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                  color: isActive ? Colors.green : Colors.grey.shade700,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          banner['title'] ?? 'Untitled Banner',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF1E293B),
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          banner['description'] ?? 'No description provided for this banner.',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Color(0xFF64748B),
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                
+                // Actions Section
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Switch(
+                        value: isActive,
+                        activeThumbColor: const Color(0xFF2563EB),
+                        onChanged: (val) async {
+                          final admin = AdminService(context.read<AuthService>().accessToken!);
+                          await admin.updateBannerStatus(banner['id'], val);
+                          _loadData();
+                        },
+                      ),
+                      const SizedBox(height: 12),
+                      IconButton(
+                        icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
+                        onPressed: () async {
+                          // Show confirmation dialog before deleting
+                          final confirm = await showDialog<bool>(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text('Delete Banner'),
+                              content: const Text('Are you sure you want to delete this banner?'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context, false),
+                                  child: const Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context, true),
+                                  style: TextButton.styleFrom(foregroundColor: Colors.red),
+                                  child: const Text('Delete'),
+                                ),
+                              ],
+                            ),
+                          );
+                          
+                          if (confirm == true) {
+                            final admin = AdminService(context.read<AuthService>().accessToken!);
+                            await admin.deleteBanner(banner['id']);
+                            _loadData();
+                          }
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -472,50 +408,182 @@ class _PopupsViewState extends State<_PopupsView> {
 
   @override
   Widget build(BuildContext context) {
-    if (_loading) return const Center(child: CircularProgressIndicator());
+    if (_loading) {
+      return const Center(
+        child: CircularProgressIndicator(color: Color(0xFF2563EB)),
+      );
+    }
+    
     if (_popups.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.campaign, size: 64, color: Colors.grey[400]),
-            const SizedBox(height: 16),
-            Text('No popups yet', style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: Colors.orange.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.campaign_outlined, size: 64, color: Colors.orange),
+            ),
+            const SizedBox(height: 24),
+            const Text(
+              'No Popups Found',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1E293B)),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Click the "Add Popup" button to create one.',
+              style: TextStyle(fontSize: 15, color: Color(0xFF64748B)),
+            ),
           ],
         ),
       );
     }
 
-    return ListView.builder(
-      padding: const EdgeInsets.all(16),
+    return ListView.separated(
+      padding: const EdgeInsets.all(24),
       itemCount: _popups.length,
+      separatorBuilder: (context, index) => const SizedBox(height: 16),
       itemBuilder: (context, index) {
         final popup = _popups[index];
         final isActive = popup['is_active'] == true;
-        return Card(
-          margin: const EdgeInsets.only(bottom: 12),
-          child: ListTile(
-            leading: const Icon(Icons.campaign, size: 40, color: Colors.orange),
-            title: Text(popup['title'] ?? 'Untitled Popup', style: const TextStyle(fontWeight: FontWeight.bold)),
-            subtitle: Text('${popup['discount_percent'] ?? 0}% Discount'),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
+        
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: const Color(0xFFE2E8F0)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.04),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Switch(
-                  value: isActive,
-                  onChanged: (val) async {
-                    final admin = AdminService(context.read<AuthService>().accessToken!);
-                    await admin.updatePopupStatus(popup['id'], val);
-                    _loadData();
-                  },
+                // Icon Section
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(Icons.campaign_outlined, size: 32, color: Colors.orange),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.delete, color: Colors.red),
-                  onPressed: () async {
-                    final admin = AdminService(context.read<AuthService>().accessToken!);
-                    await admin.deletePopup(popup['id']);
-                    _loadData();
-                  },
+                
+                const SizedBox(width: 20),
+                
+                // Content Section
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: isActive ? Colors.green.withOpacity(0.1) : Colors.grey.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              isActive ? 'ACTIVE' : 'INACTIVE',
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                                color: isActive ? Colors.green : Colors.grey.shade700,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF2563EB).withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              (popup['type'] ?? 'Announcement').toString().toUpperCase(),
+                              style: const TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF2563EB),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        popup['title'] ?? 'Untitled Popup',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF1E293B),
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        popup['message'] ?? 'No message provided.',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Color(0xFF64748B),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                
+                // Actions Section
+                Column(
+                  children: [
+                    Switch(
+                      value: isActive,
+                      activeThumbColor: const Color(0xFF2563EB),
+                      onChanged: (val) async {
+                        final admin = AdminService(context.read<AuthService>().accessToken!);
+                        await admin.updatePopupStatus(popup['id'], val);
+                        _loadData();
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                    IconButton(
+                      icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
+                      onPressed: () async {
+                        final confirm = await showDialog<bool>(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text('Delete Popup'),
+                            content: const Text('Are you sure you want to delete this popup?'),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, false),
+                                child: const Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, true),
+                                style: TextButton.styleFrom(foregroundColor: Colors.red),
+                                child: const Text('Delete'),
+                              ),
+                            ],
+                          ),
+                        );
+                        
+                        if (confirm == true) {
+                          final admin = AdminService(context.read<AuthService>().accessToken!);
+                          await admin.deletePopup(popup['id']);
+                          _loadData();
+                        }
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -559,53 +627,204 @@ class _CouponsViewState extends State<_CouponsView> {
 
   @override
   Widget build(BuildContext context) {
-    if (_loading) return const Center(child: CircularProgressIndicator());
+    if (_loading) {
+      return const Center(
+        child: CircularProgressIndicator(color: Color(0xFF2563EB)),
+      );
+    }
+    
     if (_coupons.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.local_offer, size: 64, color: Colors.grey[400]),
-            const SizedBox(height: 16),
-            Text('No coupons yet', style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: Colors.green.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.local_offer_outlined, size: 64, color: Colors.green),
+            ),
+            const SizedBox(height: 24),
+            const Text(
+              'No Coupons Found',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1E293B)),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Click the "Add Coupon" button to create one.',
+              style: TextStyle(fontSize: 15, color: Color(0xFF64748B)),
+            ),
           ],
         ),
       );
     }
 
     return ListView.builder(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(24),
       itemCount: _coupons.length,
       itemBuilder: (context, index) {
         final coupon = _coupons[index];
         final isActive = coupon['is_active'] == true;
-        return Card(
-          margin: const EdgeInsets.only(bottom: 12),
-          child: ListTile(
-            leading: const Icon(Icons.local_offer, size: 40, color: Colors.green),
-            title: Text(coupon['code']?.toString().toUpperCase() ?? 'UNKNOWN', style: const TextStyle(fontWeight: FontWeight.bold, letterSpacing: 2)),
-            subtitle: Text('${coupon['discount_percent'] ?? 0}% off | Min order: ₹${coupon['min_order_amount'] ?? 0}'),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Switch(
-                  value: isActive,
-                  onChanged: (val) async {
-                    final admin = AdminService(context.read<AuthService>().accessToken!);
-                    await admin.updateDiscountStatus(coupon['id'], val);
-                    _loadData();
-                  },
+        
+        final isPercentage = coupon['discount_type'] == 'percentage';
+        final discountText = isPercentage 
+            ? '${coupon['discount_percent'] ?? 0}% OFF'
+            : '₹${coupon['discount_amount'] ?? 0} OFF';
+            
+        return Container(
+          margin: const EdgeInsets.only(bottom: 16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: const Color(0xFFE2E8F0)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.04),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              // Ticket Left Part
+              Container(
+                width: 130,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: isActive ? Colors.green.withOpacity(0.1) : Colors.grey.withOpacity(0.1),
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    bottomLeft: Radius.circular(16),
+                  ),
+                  border: Border(
+                    right: BorderSide(
+                      color: const Color(0xFFE2E8F0),
+                      width: 2,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.delete, color: Colors.red),
-                  onPressed: () async {
-                    final admin = AdminService(context.read<AuthService>().accessToken!);
-                    await admin.deleteDiscount(coupon['id']);
-                    _loadData();
-                  },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.local_offer,
+                      color: isActive ? Colors.green : Colors.grey,
+                      size: 28,
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      discountText,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: isActive ? Colors.green.shade700 : Colors.grey.shade600,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+              
+              // Ticket Right Part
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF2563EB).withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Text(
+                                coupon['code']?.toString().toUpperCase() ?? 'UNKNOWN',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 2,
+                                  color: Color(0xFF2563EB),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            Text(
+                              coupon['description'] ?? 'No description',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF1E293B),
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              'Min order: ₹${coupon['min_order_amount'] ?? 0}',
+                              style: const TextStyle(
+                                fontSize: 13,
+                                color: Color(0xFF64748B),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      
+                      // Actions
+                      Column(
+                        children: [
+                          Switch(
+                            value: isActive,
+                            activeThumbColor: const Color(0xFF2563EB),
+                            onChanged: (val) async {
+                              final admin = AdminService(context.read<AuthService>().accessToken!);
+                              await admin.updateDiscountStatus(coupon['id'], val);
+                              _loadData();
+                            },
+                          ),
+                          const SizedBox(height: 8),
+                          IconButton(
+                            icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
+                            onPressed: () async {
+                              final confirm = await showDialog<bool>(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: const Text('Delete Coupon'),
+                                  content: const Text('Are you sure you want to delete this coupon?'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context, false),
+                                      child: const Text('Cancel'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context, true),
+                                      style: TextButton.styleFrom(foregroundColor: Colors.red),
+                                      child: const Text('Delete'),
+                                    ),
+                                  ],
+                                ),
+                              );
+                              
+                              if (confirm == true) {
+                                final admin = AdminService(context.read<AuthService>().accessToken!);
+                                await admin.deleteDiscount(coupon['id']);
+                                _loadData();
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         );
       },

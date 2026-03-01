@@ -38,7 +38,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Saved Nests', style: TextStyle(fontWeight: FontWeight.bold)),
-        backgroundColor: theme.colorScheme.background,
+        backgroundColor: theme.colorScheme.surface,
         elevation: 0,
         centerTitle: true,
         actions: [

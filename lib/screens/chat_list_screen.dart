@@ -5,7 +5,7 @@ import '../services/auth_service.dart';
 import 'chat_screen.dart';
 
 class ChatListScreen extends StatefulWidget {
-  const ChatListScreen({Key? key}) : super(key: key);
+  const ChatListScreen({super.key});
 
   @override
   _ChatListScreenState createState() => _ChatListScreenState();

@@ -3,7 +3,6 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'dart:io';
 import 'api_constants.dart';
 import 'user_profile_service.dart';
 import 'storage_service.dart';
@@ -156,8 +155,11 @@ class AuthService extends ChangeNotifier {
           
           debugPrint('🔐 Decode successful!');
           debugPrint('🔐 Data keys: ${data.keys.toList()}');
-          debugPrint('🔐 Has accessToken: ${data.containsKey('accessToken')}');
-          debugPrint('🔐 Has user: ${data.containsKey('user')}');
+          debugPrint('🔐 Data type: ${data.runtimeType}');
+          debugPrint('🔐 accessToken type: ${data['accessToken'].runtimeType}');
+          debugPrint('🔐 accessToken value: ${data['accessToken']}');
+          debugPrint('🔐 refreshToken type: ${data['refreshToken'].runtimeType}');
+          debugPrint('🔐 user type: ${data['user'].runtimeType}');
         } catch (e, stackTrace) {
           debugPrint('🔐 JSON Parse Error: $e');
           debugPrint('🔐 Stack trace: $stackTrace');
@@ -399,7 +401,7 @@ class AuthService extends ChangeNotifier {
           'phone': phone,
           'partner_name': partnerName,
           'anniversary_date': anniversaryDateStr,
-          if (avatarUrl != null) 'avatar_url': avatarUrl,
+          'avatar_url': ?avatarUrl,
         };
         
         debugPrint('🔐 Profile updated successfully');

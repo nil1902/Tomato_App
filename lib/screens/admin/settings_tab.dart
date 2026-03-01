@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lovenest/services/admin_service.dart';
+import 'package:lovenest/services/auth_service.dart';
+import 'package:go_router/go_router.dart';
 
 /// Settings Tab - App Configuration
 class SettingsTab extends StatefulWidget {
@@ -136,6 +138,25 @@ class _SettingsTabState extends State<SettingsTab> {
                 'Free up space',
                 Icons.cleaning_services,
                 () => _clearCache(),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+
+          _buildSection(
+            'Account',
+            [
+              ListTile(
+                leading: const Icon(Icons.logout, color: Colors.red),
+                title: const Text('Sign Out', style: TextStyle(color: Colors.red)),
+                subtitle: const Text('Log out of admin panel'),
+                trailing: const Icon(Icons.chevron_right, color: Colors.red),
+                onTap: () async {
+                  await AuthService().logout();
+                  if (context.mounted) {
+                    context.go('/login');
+                  }
+                },
               ),
             ],
           ),
